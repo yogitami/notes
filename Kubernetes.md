@@ -22,7 +22,7 @@
 
 |   Kubernetes Internal working  |
 | --- |
-| <img width="100%" src="/Users/yogitamittal/Documents/ImagesForDocs/Kubernetes_Flow.png"> |
+| <img width="100%" src="*/ImagesForDocs/Kubernetes_Flow.png"> |
 |  |
 
 *What generally happens*

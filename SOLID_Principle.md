@@ -57,6 +57,8 @@ Ex :
 ### L -> Liskov Substitution Principle
 
 1. If class B is a subtype of class A, then we should be able to replace object of A with B without breaking the behaviour of the progran.
+2. No new exceptions can be thrown by the subtype
+3. Clients should not know which specific subtype they are calling.
 
 Ex : 
 

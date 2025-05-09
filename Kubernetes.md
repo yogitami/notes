@@ -126,7 +126,7 @@ BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD
 
 |  Kubernetes  |
 | --- |
-| <img width="100%" src="ImagesForDocs/K8.png"> |
+| <img width="100%" src="ImagesForDocs/k8.png"> |
 |  |
 
 ## K9s

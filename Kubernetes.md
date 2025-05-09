@@ -22,7 +22,7 @@
 
 |   Kubernetes Internal working  |
 | --- |
-| <img width="100%" src="*/ImagesForDocs/Kubernetes_Flow.png"> |
+| <img width="100%" src="ImagesForDocs/Kubernetes_Flow.png"> |
 |  |
 
 *What generally happens*
@@ -44,9 +44,9 @@
 
 |  Kubernetes Components   |
 | --- |
-| <img width="100%" src="/Users/yogitamittal/Documents/ImagesForDocs/K8_Components_1.png"> |
+| <img width="100%" src="ImagesForDocs/K8_Components_1.png"> |
 |  |
-| <img width="100%" src="/Users/yogitamittal/Documents/ImagesForDocs/K8_Components_2.png"> |
+| <img width="100%" src="ImagesForDocs/K8_Components_2.png"> |
 
 1. Node & Pod
 : 
@@ -128,7 +128,7 @@ BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD
 
 |  Kubernetes   |
 | --- |
-| <img width="100%" src="/Users/yogitamittal/Documents/ImagesForDocs/K8.png"> |
+| <img width="100%" src="ImagesForDocs/K8.png"> |
 |  |
 
 
@@ -141,7 +141,7 @@ BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD
 
 ## Helm
 : 
-| <img width="100%" src="/Users/yogitamittal/Documents/ImagesForDocs/helm.png"> |
+| <img width="100%" src="ImagesForDocs/helm.png"> |
 |  |
 | Let's say we have deployed our app in k8 cluster and now we want to do logging. Without helm, each person who wants to do logging will have to configure all the yaml files relating to it. Helm provides a easy way to achieve this where just one person can do the work of configuring yaml files and package them and make it available somewhere so that others can just use it. That bundle of yaml files is called as "helm chart"|
 

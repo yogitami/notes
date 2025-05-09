@@ -117,7 +117,6 @@
 - We create deployment with some image using kubctl create deployment ... (command)
 
 ## Namespace
-: 
 Virtual cluster inside a cluster.
 
 
@@ -125,13 +124,10 @@ FLOW :
 
 BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD 
 
-
-|  Kubernetes   |
+|  Kubernetes  |
 | --- |
 | <img width="100%" src="ImagesForDocs/K8.png"> |
 |  |
-
-
 
 ## K9s
 
@@ -140,7 +136,7 @@ BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD
 
 
 ## Helm
-: 
+
 | <img width="100%" src="ImagesForDocs/helm.png"> |
 |  |
 | Let's say we have deployed our app in k8 cluster and now we want to do logging. Without helm, each person who wants to do logging will have to configure all the yaml files relating to it. Helm provides a easy way to achieve this where just one person can do the work of configuring yaml files and package them and make it available somewhere so that others can just use it. That bundle of yaml files is called as "helm chart"|
@@ -184,7 +180,7 @@ BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD
 	- GCP services like Cloud SQL, IAM, and networking are configured using gcloud commands.
 1. SOPS (Secrets OPerationS) : Used for managing and encrypting sensitive data (e.g., secrets for Kubernetes).
 1. Bash Scripts : Scripts like create.sh and create-test.sh automate cluster creation, resource provisioning, and service deployment.
-1. 
+
 
 
 

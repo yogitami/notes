@@ -138,7 +138,7 @@
     words.stream().distinct().forEach(System.out::println); // Option1
     words.stream().collect(Collectors.toSet()); //Option 2
     ```
-20. Duplicate elements in a given list of integers.
+20. Print duplicate elements in a given list of integers.
     ```
     input.stream().collect(Collectors.groupingBy(Function::identity,Collectors.counting))
             .entrySet().stream()

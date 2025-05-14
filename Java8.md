@@ -96,4 +96,52 @@
             stats.getMin();
             stats.getSum();
     ```
-11. 
+    *We can also use mapToInt(condition) and then use methods from it like sum(),average(),etc.*
+    
+    *Also, we can use .collect(Collectors.averagingInt(condition));*
+12. Find the word with thrid highest length
+    ```
+    words.stream().sorted( (w1,w2) -> Integer.compare(w2.length(),w1.length())).skip(2).findFirst().ifPresent(System.out::println);
+    words.stream().sorted(Comparator.comparingInt(String::length).reversed()).skip(2).findFirst().ifPresent(System.out::println); // Option 2
+    ```
+13. Given an interger array return true if array contains duplicate element return false otherwise.
+    ```
+    Set<Integer> result = new HashSet<>();
+    boolean res = Arrays.stream(arr).anyMatch(value -> !result.add(value)); // Option 1
+    Arrays.stream(arr).filter( value -> !result.add(value)).findAny().ifPresent(System.out::println); //Option 2
+    boolean res = Arrays.stream(arr).distinct().count() != arr.length; // Option 3
+    ```
+14. Write a program to print the count of each character in a string.
+    ```
+    Map<String, Long> res = Arrays.stream(input.split("")).filter( s -> !s.isBlank())
+                .collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+    ```
+15. Find the intersection of two lists.
+    ```
+    List<Integer> combinedList = list1.stream().filter(list2::contains).toList();
+    ```
+16. How to patition the list of numbers in even and odd groups.
+    ```
+    Map<Boolean, List<Integer>> res  = num.stream().collect(Collectors.partitioningBy(o -> o % 2 == 0));
+    ```
+17. Sort by multiple fields using stream.
+    ```
+    List<Employee> employees = .....
+    employees.stream().sorted(Comparator.comparingInt(Employee::getAge).thenComparing(Employee::getName).reversed()).forEach(System.out::println);
+    ```
+18. Find the longest string in a list of strings.
+    ```
+    Optional<String> res = words.stream().max(Collectors.comparingInt(String::length));
+    ```
+19. Given a list of string, remove the duplicates.
+    ```
+    words.stream().distinct().forEach(System.out::println); // Option1
+    words.stream().collect(Collectors.toSet()); //Option 2
+    ```
+20. Duplicate elements in a given list of integers.
+    ```
+    input.stream().collect(Collectors.groupingBy(Function::identity,Collectors.counting))
+            .entrySet().stream()
+            .filter(m -> m.getValue > 1).map( m -> m.getKey())
+            .collect(Collectors.toSet()) ;
+    ```

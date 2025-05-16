@@ -1,5 +1,113 @@
 # Java 8
 
+### IntStream
+:
+1. IntStream is a specialized stream for working with int values.
+2. Ways to create IntStream : Arrays.stream(int[] array), IntStream.range(start, end) or IntStream.rangeClosed(start, end).
+3. 
+
+| Methods              |  |  |
+| :---------------- | :------: | ----: |
+| filter()          | count()         | empty()      |
+| map()             | findFirst()         |  collect()     |
+| sum()             | findAny()          |       |
+| average()         | noneMatch()         |       |
+| min()/max()       | anyMatch()         |       |
+| sorted()          | allMatch()         |       |
+| forEach()         | flatMap()         |       |
+| average()         |   peek()       |       |
+| distinct()        |   skip()       |       |
+| limit()           | mapToDouble         |       |
+| reduce()          | mapToLong         |       |
+
+Example of reduce():
+public static void main(String[] args) {
+        int number = 5;
+        int factorial = IntStream.rangeClosed(1, number)
+                                 .reduce(1, (a, b) -> a * b);
+        System.out.println("Factorial of " + number + ": " + factorial);
+    }
+
+### Stream
+
+| Methods              |  |  |
+| :---------------- | :------: | ----: |
+| filter()          | count()         | empty()      |
+| map()             | findFirst()         |  of()     |
+| sum()             | findAny()          |  collect()     |
+| average()         | noneMatch()         | flatMapToDoube()       |
+| min()/max()       | anyMatch()         | flatMapToInt()      |
+| sorted()          | allMatch()         |  toList()     |
+| forEach()         | flatMap()         | ofNullable()      |
+| average()         |   peek()       |       |
+| distinct()        |   skip()       |       |
+| limit()           |  concat()        |       |
+| reduce()          | toArray()         |       |
+
+### Collectors
+
+| Methods              |  |  |
+| :---------------- | :------: | ----: |
+| toList()          |  summarizingDouble()       |      |
+| toMap()             | maxBy() : Optional<Person> oldestPerson = people.stream().collect(Collectors.maxBy(Comparator.comparingInt(Person::getAge)))        |       |
+| groupingBy()             |           |       |
+| counting()         |          |        |
+| joining()       |          |       |
+| partitioningBy()          |          |       |
+| mapping()         |          |       |
+| summarzingInt() : getCount(),getMax(),getMin(),getAverage()        |         |       |
+| summingDouble()        |         |       |
+| reducing() : Collectors.reducing(Integer::sum)           |         |       |
+| averagingInt()          |         |       |
+
+#### toMap()
+```
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class EmployeeDepartmentExample {
+    static class Employee {
+        String name;
+        String department;
+
+        Employee(String name, String department) {
+            this.name = name;
+            this.department = department;
+        }
+
+        String getName() {
+            return name;
+        }
+
+        String getDepartment() {
+            return department;
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Employee> employees = Arrays.asList(
+            new Employee("Alice", "HR"),
+            new Employee("Bob", "IT"),
+            new Employee("Charlie", "HR"),
+            new Employee("David", "Finance")
+        );
+
+        // Collect the employees into a Map with the department as the key and names as the value
+        Map<String, String> departmentMap = employees.stream()
+                                                     .collect(Collectors.toMap(
+                                                         Employee::getDepartment,
+                                                         Employee::getName,
+                                                         (existing, replacement) -> existing + ", " + replacement
+                                                     ));
+
+        System.out.println("Department Map: " + departmentMap);
+    }
+}
+```
+
+
 1. Given a list of strings, find out those strings which starts with a number.
 
 ```

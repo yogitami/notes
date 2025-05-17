@@ -7,7 +7,7 @@
     - pom.xml internally handles the dependencies.
  
       1. [Annotations](#Annotations)
-      2. [Hibernate Validator](#Hibernate Validator)
+      2. [Hibernate Validator](#HibernateValidator)
 
 
 <a name = "Annotations" />
@@ -48,7 +48,7 @@ value = "/../.../...",
 produces = MediaType.APPLICATION_JSON_VALUE,
 consumes = MediaType.APPLICATION_JSON_VALUE)
 ```
-<a name = "Hibernate Validator" />
+<a name = "HibernateValidator" />
 
 ### Validation using Hibernate Validator
 spring-boot-starter-validation dependency.

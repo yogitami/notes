@@ -5,6 +5,11 @@
     - help create stand only application.
     - provides embedded servers and provides support for in memory db (h2).
     - pom.xml internally handles the dependencies.
+ 
+      1. [Annotations](#Annotations)
+
+
+<a name = "Annotations" />
 
 ### Annotations
 1. @ComponentScan(basePackages = "com.example")
@@ -85,6 +90,8 @@ spring-boot-starter-validation dependency.
 11. The validations can also be added like this *@PathVariable("id") @Min(5) int id* in the controller.
 12. @Positive @RequestParam(name = "id")  int id
 13. @NegativeOrZero @RequestParam(name = "id")  int id
+
+[link](#ann)
 
 ### Data JPA Annotations
 1. @CreatedBy

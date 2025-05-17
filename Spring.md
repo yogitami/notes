@@ -8,6 +8,17 @@
  
       1. [Annotations](#Annotations)
       2. [Hibernate Validator](#HibernateValidator)
+      3. [JPAAnnotations](#JPAAnnotations)
+      4. [IOCAndDI](#IOCAndDI)
+      5. [ExceptionHandling](#ExceptionHandling)
+      6. [Service](#Service)
+      7. [Controller](#Controller)
+      8. [POJO](#POJO)
+      9. [Scopes](#Scopes)
+      10. [Transactions](#Transactions)
+      11. [Database](#Database)
+      12. [Model Mapper](#ModelMapper)
+      13. [Security](#Security)
 
 
 <a name = "Annotations" />
@@ -48,6 +59,7 @@ value = "/../.../...",
 produces = MediaType.APPLICATION_JSON_VALUE,
 consumes = MediaType.APPLICATION_JSON_VALUE)
 ```
+
 <a name = "HibernateValidator" />
 
 ### Validation using Hibernate Validator
@@ -94,7 +106,7 @@ spring-boot-starter-validation dependency.
 12. @Positive @RequestParam(name = "id")  int id
 13. @NegativeOrZero @RequestParam(name = "id")  int id
 
-[link](#ann)
+<a name = "JPAAnnotations" />
 
 ### Data JPA Annotations
 1. @CreatedBy
@@ -107,8 +119,8 @@ spring-boot-starter-validation dependency.
 8. @Lock: This annotation specifies locking behavior for methods. We can configure the lock mode when we execute a repository query method : @Lock(LockModeType.NONE) with @Query. There are different types of lock mode available.
 9. @Modifying: This annotation marks a query as modifying (e.g., for update or delete operations). It is used with @Query
 10. @EnableJpaRepositories: This annotation enables JPA repositories in a Spring application. It has to be used with @Configuration
-11. 
     
+<a name = "IOCAndDI" />
 
 ### IOC & DI
 **IOC :** It is a design principle where the control of object creation and lifecycle is managed by a framework or container rather than by the developer. Spring IOC Container is responsible for creating, configuring, and managing the lifecycle of objects called beans.
@@ -116,6 +128,8 @@ spring-boot-starter-validation dependency.
 **DI:** It is a design pattern and a part of IOC container. It allows objects to be injected with their dependencies rather than creating those dependencies themselves.
 
 1. Constructor Injection : immutable object, We can either annotate the constructor with @Autowired with this or just use this.
+
+<a name = "ExceptionHandling" />
 
 ### Exception Handling
   - Creating Custom Exceptions
@@ -176,7 +190,7 @@ spring-boot-starter-validation dependency.
             }
         }
       ```
-      
+<a name = "Service" />
 
 ### Service class
   - Code
@@ -208,9 +222,12 @@ spring-boot-starter-validation dependency.
             }
         }
     ```
+<a name = "Controller" />
+
 ### Controller
     - for the parameters in the method, @Valid @RequestBody Department department
 
+<a name = "POJO" />
 
 ### POJO & DAO with JPA
 1. DAO :
@@ -227,6 +244,8 @@ spring-boot-starter-validation dependency.
     BigMoney txnValue;
   - @MappedSuperclass : and the class is abstract at this level, we extend this class and other main classes and then define the @entity there. However we can define and @id here.
 
+<a name = "Scopes" />
+
 ### Scopes
 Scopes in Spring : Used with @Bean, @Scope("prototype") or @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
   - Singleton : single application context
@@ -241,6 +260,8 @@ Scopes in Spring : Used with @Bean, @Scope("prototype") or @Scope(value = Config
   - Application : Creates a bean instance for the lifecycle of a ServletContext.
   - Web socket : Creates a bean instance for a particular WebSocket session.
 
+<a name = "Transactions" />
+
 ### Transactions
 Transactions in Spring : Metadata used for managing transactions in the springboot application.
   - We can either enable it by adding @EnableTransactionManagement with configuration class or it will be enabled by default if we have spring-data-* or spring-tx dependencies.
@@ -251,6 +272,8 @@ Transactions in Spring : Metadata used for managing transactions in the springbo
         - @Transactional(rollbackFor = { SQLException.class })
   - Only public methods should be annotated with @Transactional.
   - Spring creates proxies for all the classes annotated with @Transactional that's why only external calls will be intercepted. Any self invocation calls will not start transaction.
+
+<a name = "Database" />
 
 ### Database
 1) H2 :
@@ -330,6 +353,7 @@ Transactions in Spring : Metadata used for managing transactions in the springbo
       ```
    5) transactionManager & entityManagerFactory is required in the configuration class. We actually set the entityManagerFactory in the transactionManager.
 
+<a name = "ModelMapper" />
 ### Model Mapper
 There would be cases where we have sensitive data stored in our database and we don't want everything to go away with get request in such a case we can use **Model Mapper** which is provided by maven.
   - Create a DTO class for model : like an adapter it will just have information then we want to send out.
@@ -353,5 +377,7 @@ There would be cases where we have sensitive data stored in our database and we 
         return new ModelMapper();
         }
       ```
+<a name = "Security"/>
+
 ### Security
     - add the spring-boot-starter-security and @EnableSpringSecurity

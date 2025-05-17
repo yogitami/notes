@@ -7,7 +7,7 @@
     - pom.xml internally handles the dependencies.
  
       1. [Annotations](#Annotations)
-      2. Hibernate Validator(#Hibernate Validator)
+      2. [Hibernate Validator](#Hibernate Validator)
 
 
 <a name = "Annotations" />

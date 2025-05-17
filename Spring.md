@@ -26,10 +26,6 @@
 17. @EnableScheduling: This annotation enables scheduling in Spring.
 18. @Scheduled: This annotation marks a method to be executed on a fixed schedule.
 19. @Transactional: This annotation marks a method or class as transactional.
-20. @Procedure: This annotation marks a method for calling a stored procedure.
-21. @Lock: This annotation specifies locking behavior for methods.
-22. @Modifying: This annotation marks a query as modifying (e.g., for update or delete operations).
-23. @EnableJpaRepositories: This annotation enables JPA repositories in a Spring application.
 24. @ConditionalOnProperty :
 ```
 @Bean(name = "smsNotification")
@@ -85,6 +81,23 @@ spring-boot-starter-validation dependency.
             }
         }
     ```
+10. We can also add @Validated at the class level on @RestController
+11. The validations can also be added like this *@PathVariable("id") @Min(5) int id* in the controller.
+12. @Positive @RequestParam(name = "id")  int id
+13. @NegativeOrZero @RequestParam(name = "id")  int id
+
+### Data JPA Annotations
+1. @CreatedBy
+2. @LastModifiedBy
+3. @Query("FROM Person p WHERE p.name = :name") Person findByName(@Param("name") String name);
+4. @Transient
+5. @CreatedDate
+6. @LastModifiedDate
+7. @Procedure: This annotation marks a method for calling a stored procedure.
+8. @Lock: This annotation specifies locking behavior for methods. We can configure the lock mode when we execute a repository query method : @Lock(LockModeType.NONE) with @Query. There are different types of lock mode available.
+9. @Modifying: This annotation marks a query as modifying (e.g., for update or delete operations). It is used with @Query
+10. @EnableJpaRepositories: This annotation enables JPA repositories in a Spring application. It has to be used with @Configuration
+11. 
     
 
 ### IOC & DI

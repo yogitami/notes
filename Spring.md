@@ -47,14 +47,44 @@ produces = MediaType.APPLICATION_JSON_VALUE,
 consumes = MediaType.APPLICATION_JSON_VALUE)
 ```
 ### Validation using Hibernate Validator
-1. @NotNull
-2. @NotEmpty : check for null & empty both
-3. @NotBlank
-4. @Min
-5. @Max
-6. @Size
-7. @Email
-8. @Pattern
+spring-boot-starter-validation dependency.
+1. @NotNull(message = "Enter a valid Employee Id")
+2. @NotEmpty(message = "Must not be Empty and NULL")
+3. @NotBlank(message = "employee name can't be left empty")
+4. @Min(value=18, message = "Minimum working age 18")
+5. @Max(value=60, message = "Maximum working age 60") private Integer age;
+6. @Size(min = 10, max = 100, message= "Address should have a length between 10 and 100 characters."))
+7. @Email(message = "Please enter a valid email Id")
+8. @Pattern(regexp = "^[0-9]{5}$", message = "Employee postal code must be a 5-digit number.")
+9. Global exception handler.
+    ```
+        @ControllerAdvice
+        public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+        
+            @Override
+            protected ResponseEntity<Object> handleMethodArgumentNotValid(
+                    MethodArgumentNotValidException ex, HttpHeaders headers,
+                    HttpStatus status, WebRequest request) {
+        
+                // Create a response body map
+                Map<String, Object> responseBody = new HashMap<>();
+                responseBody.put("timestamp", Instant.now().toString()); // ISO-8601 timestamp
+                responseBody.put("status", status.value());
+                responseBody.put("error", status.getReasonPhrase()); // e.g., "Bad Request"
+        
+                // Collect all validation errors
+                List<String> errors = ex.getBindingResult()
+                        .getFieldErrors()
+                        .stream()
+                        .map(fieldError -> fieldError.getDefaultMessage())
+                        .collect(Collectors.toList());
+        
+                responseBody.put("errors", errors);
+        
+                return new ResponseEntity<>(responseBody, headers, status);
+            }
+        }
+    ```
     
 
 ### IOC & DI

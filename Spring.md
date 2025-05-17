@@ -6,6 +6,64 @@
     - provides embedded servers and provides support for in memory db (h2).
     - pom.xml internally handles the dependencies.
 
+### Annotations
+1. @ComponentScan(basePackages = "com.example")
+2. @Value: This annotation injects values into fields from property files.
+3. @Lazy: This annotation indicates that the bean should be lazily initialized.
+4. @Required: This annotation marks a property as required for injection.
+5. @PropertySource: This annotation specifies the location of property files for the application context.
+6. @Import: This annotation imports other configuration classes.
+7. @SpringBootApplication: This annotation is used to mark the main class of a Spring Boot application. It encapsulates @Configuration, @EnableAutoConfiguration, and @ComponentScan annotations with their default attributes.
+8. @RequestBody: This annotation binds the body of the HTTP request to a Java object.
+9. @ResponseBody: This annotation indicates that the return value of the method should be used as the response body.
+10. @RestController: This annotation is a combination of @Controller and @ResponseBody, used for RESTful web services.
+11. @ResponseStatus: This annotation specifies the HTTP status code for the response.
+12. @Profile: This annotation is used to indicate that a @Component class or a @Bean method should only be used when a specific profile is active.
+13. @Configuration: This annotation indicates that the class can be used by the Spring IoC container as a source of bean definitions.
+14. @ComponentScan: This annotation is used to specify the base packages for scanning components.
+15. @EnableAsync: This annotation enables asynchronous processing in Spring.
+16. @Async: This annotation marks a method to be executed asynchronously.
+17. @EnableScheduling: This annotation enables scheduling in Spring.
+18. @Scheduled: This annotation marks a method to be executed on a fixed schedule.
+19. @Transactional: This annotation marks a method or class as transactional.
+20. @Procedure: This annotation marks a method for calling a stored procedure.
+21. @Lock: This annotation specifies locking behavior for methods.
+22. @Modifying: This annotation marks a query as modifying (e.g., for update or delete operations).
+23. @EnableJpaRepositories: This annotation enables JPA repositories in a Spring application.
+24. @ConditionalOnProperty :
+```
+@Bean(name = "smsNotification")
+@ConditionalOnProperty(prefix = "notification", name = "service", havingValue = "sms")
+public NotificationSender notificationSender2() {
+    return new SmsNotification();
+}
+In application.property file : notification.service=sms
+```
+25. @RequestMapping
+```
+@RequestMapping(
+value = "/../.../...",
+produces = MediaType.APPLICATION_JSON_VALUE,
+consumes = MediaType.APPLICATION_JSON_VALUE)
+```
+### Validation using Hibernate Validator
+1. @NotNull
+2. @NotEmpty : check for null & empty both
+3. @NotBlank
+4. @Min
+5. @Max
+6. @Size
+7. @Email
+8. @Pattern
+    
+
+### IOC & DI
+**IOC :** It is a design principle where the control of object creation and lifecycle is managed by a framework or container rather than by the developer. Spring IOC Container is responsible for creating, configuring, and managing the lifecycle of objects called beans.
+
+**DI:** It is a design pattern and a part of IOC container. It allows objects to be injected with their dependencies rather than creating those dependencies themselves.
+
+1. Constructor Injection : immutable object, We can either annotate the constructor with @Autowired with this or just use this.
+
 ### Exception Handling
   - Creating Custom Exceptions
     ```
@@ -21,38 +79,51 @@
       }
     ```
     - Service class will use the throw keyword to throw the exception and then we can use @ExceptionHandler(value = NoSuchCustomerExistsException.class) in the controller to handle the exception
-    - In controller the logic will be :
+        - In controller the logic will be :
+          ```
+          @GetMapping("/getCustomer/{id}")
+          public Customer getCustomer(@PathVariable("id") Long id) {
+            return customerService.getCustomer(id);
+          }
+    
+          // Adding exception handlers for NoSuchCustomerExistsException 
+          // and NoSuchElementException.
+          @ExceptionHandler(value = NoSuchCustomerExistsException.class)
+          @ResponseStatus(HttpStatus.NOT_FOUND)
+          public ErrorResponse handleNoSuchCustomerExistsException(NoSuchCustomerExistsException ex) {
+              return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+          }
+          @ExceptionHandler(value = NoSuchElementException.class)
+          @ResponseStatus(HttpStatus.NOT_FOUND)
+          public ErrorResponse handleNoSuchElementException(NoSuchElementException ex) {
+              return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+          }
+          @Data
+          @AllArgsConstructor
+          @NoArgsConstructor
+          public class ErrorResponse {
+            private int statusCode;
+            private String message;
+            public ErrorResponse(String message)
+            {
+              super();
+              this.message = message;
+            }
+          }
+          ```
+    - @ContollerAdvice : Global Exception Handler
       ```
-      @GetMapping("/getCustomer/{id}")
-      public Customer getCustomer(@PathVariable("id") Long id) {
-        return customerService.getCustomer(id);
-      }
-
-      // Adding exception handlers for NoSuchCustomerExistsException 
-      // and NoSuchElementException.
-      @ExceptionHandler(value = NoSuchCustomerExistsException.class)
-      @ResponseStatus(HttpStatus.NOT_FOUND)
-      public ErrorResponse handleNoSuchCustomerExistsException(NoSuchCustomerExistsException ex) {
-          return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-      }
-      @ExceptionHandler(value = NoSuchElementException.class)
-      @ResponseStatus(HttpStatus.NOT_FOUND)
-      public ErrorResponse handleNoSuchElementException(NoSuchElementException ex) {
-          return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-      }
-      @Data
-      @AllArgsConstructor
-      @NoArgsConstructor
-      public class ErrorResponse {
-        private int statusCode;
-        private String message;
-        public ErrorResponse(String message)
-        {
-          super();
-          this.message = message;
+        @ControllerAdvice
+        public class GlobalExceptionHandler {
+        
+            @ExceptionHandler(value = NoSuchCustomerExistsException.class)
+            @ResponseStatus(HttpStatus.NOT_FOUND)
+            public @ResponseBody ErrorResponse handleException(NoSuchCustomerExistsException ex) {
+                return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+            }
         }
-      }
       ```
+      
 
 ### Service class
   - Code
@@ -84,6 +155,8 @@
             }
         }
     ```
+### Controller
+    - for the parameters in the method, @Valid @RequestBody Department department
 
 
 ### POJO & DAO with JPA
@@ -127,8 +200,82 @@ Transactions in Spring : Metadata used for managing transactions in the springbo
   - Spring creates proxies for all the classes annotated with @Transactional that's why only external calls will be intercepted. Any self invocation calls will not start transaction.
 
 ### Database
-Database
-  - if with JPA, spring.data.source.url, username, password, spring.jpa.properties.hibernate.dialect, spring.jpa.hibernate.ddl-auto=update, spring.jpa.show-sql=true
+1) H2 :
+  - add the spring-boot-starter-data-jpa and h2 dependency.
+  - spring.h2.console.enabled=true,spring.data.source.url, username, password, spring.jpa.properties.hibernate.dialect, spring.jpa.hibernate.ddl-auto=update
+    
+2) MySQL :
+  - spring.jpa.hibernate.ddl-auto=update, spring.jpa.show-sql=true, spring.data.source.url, username, password, spring.datasource.driver-class-name
+
+3) Database configuration for springboot
+      - We would need a DatabaseConfig class, the class will look like below.
+          ```
+            @Configuration
+            @EnableJpaRepositories(basePackages = {"com.gfg.jpaquerymethods"})
+            @EnableTransactionManagement
+            @Profile({ "production", "development" })
+            public class DatabaseConfig {
+              @Bean
+                @DependsOn("liquibase")
+                public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
+                    LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
+                    lef.setDataSource(dataSource);
+                    lef.setJpaVendorAdapter(jpaVendorAdapter);
+                    lef.setPackagesToScan("package_path");
+                    return lef;
+                }
+            
+                @Bean
+                public JpaVendorAdapter jpaVendorAdapter() {
+                    HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+                    hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
+                    hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQL5InnoDBDialect");
+                    return hibernateJpaVendorAdapter;
+                }
+            
+                @Bean
+                public PlatformTransactionManager transactionManager() {
+                    return new JpaTransactionManager();
+                }
+            
+                @Bean
+                public TransactionTemplate transactionTemplate(PlatformTransactionManager transactionManager) {
+                    return new TransactionTemplate(transactionManager);
+                }
+            
+                @Bean(destroyMethod = "close")
+                @Lazy(false)
+                public HikariDataSource dataSource(Environment environment) {
+                    final HikariDataSource ds = new HikariDataSource();
+                    ds.setMaximumPoolSize(10);
+                    ds.setDataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource");
+                    ds.addDataSourceProperty("url", environment.getRequiredProperty("database.url"));
+                    ds.addDataSourceProperty("user", environment.getProperty("DB_USER", "name"));
+                    ds.addDataSourceProperty("password", environment.getProperty("DB_PASSWORD", "name"));
+                    ds.addDataSourceProperty("cachePrepStmts", true);
+                    ds.addDataSourceProperty("prepStmtCacheSize", 250);
+                    ds.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
+                    ds.addDataSourceProperty("useServerPrepStmts", true);
+                    return ds;
+                }
+            
+                @Bean(name = "liquibase")
+                public SpringLiquibase createLiquibase(DataSource dataSource, Environment environment) {
+                    SpringLiquibase liquibase = new SpringLiquibase();
+                    liquibase.setDataSource(dataSource);
+                    liquibase.setChangeLog("classpath:/schema/changelog.xml");
+                    liquibase.setContexts(environment.getProperty("liquibase.context", ""));
+                    return liquibase;
+                }
+            }
+          ```
+   4) In repository class,
+      ```
+        @Async
+        @Query("SELECT contest.contestName FROM Contest contest where contest.id = :id") 
+        Future<String> findContestAsyncById(@Param("id") Long id); 
+      ```
+   5) transactionManager & entityManagerFactory is required in the configuration class. We actually set the entityManagerFactory in the transactionManager.
 
 ### Model Mapper
 There would be cases where we have sensitive data stored in our database and we don't want everything to go away with get request in such a case we can use **Model Mapper** which is provided by maven.
@@ -153,3 +300,5 @@ There would be cases where we have sensitive data stored in our database and we 
         return new ModelMapper();
         }
       ```
+### Security
+    - add the spring-boot-starter-security and @EnableSpringSecurity

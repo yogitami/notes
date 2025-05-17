@@ -243,6 +243,11 @@ spring-boot-starter-validation dependency.
     @Columns(columns = {@Column(name = "currency"), @Column(name = "transaction_value")})
     BigMoney txnValue;
   - @MappedSuperclass : and the class is abstract at this level, we extend this class and other main classes and then define the @entity there. However we can define and @id here.
+  - GenerationType :
+    - AUTO : automatically assigns the strategy based on type of db used.
+    - IDENTITY : mysql, postgres , if sequential order is essential
+    - SEQUENCE : mysql,oracle,postgres, if sequentail order is essential
+    - TABLE : for full control  
 
 <a name = "Scopes" />
 
@@ -267,7 +272,7 @@ Transactions in Spring : Metadata used for managing transactions in the springbo
   - We can either enable it by adding @EnableTransactionManagement with configuration class or it will be enabled by default if we have spring-data-* or spring-tx dependencies.
   - We can now annotate a bean with @Transactional either at the class or method level. Ususally used with @Service.
   - Configuration :
-        - Propagation Type, solation Level, Timeout, readOnly flag (a hint for the persistence provider that the transaction should be read only), Rollback rules.
+        - Propagation Type, solation Level, Timeout, readOnly flag (a hint for the persistence provider that the transaction should be read only) -- @Transactional(readOnly = true) , Rollback rules.
   - Only public methods should be annotated with @Transactional.
   - Spring creates proxies for all the classes annotated with @Transactional that's why only external calls will be intercepted. Any self invocation calls will not start transaction.
 
@@ -286,20 +291,20 @@ Transactions in Spring : Metadata used for managing transactions in the springbo
     ```
 So what happened above is that, when we are calling the saveUser in the same class then the proxy is not created and hence the transactional doesn't work. To make it work we need to call saveUser(User user) from some other class managed by Spring IOC.
 
-    - @Transactional(propogation = Propogation.NEVER) //INCORRECT, transaction will never work. Use proper Propogation level.
-    - @Transactional(isolation = Propogation.NEVER)
+    - @Transactional(propogation = Propogation.NEVER) //INCORRECT, transaction will never work. Use proper Propogation level. Default : Propogation.REQUIRED
+    - @Transactional(isolation = Isolation.READ_COMMITTED) or Isolation.REPEATABLE_READ // Use these isolation levels generally. Never use READ_UNCOMMITTED
     
 Rollback happens for runtime, unchecked exceptions only. 
 The checked exception does not trigger a rollback of the transaction. 
 We can, of course, configure this behavior with the rollbackFor and noRollbackFor annotation parameters.
     - @Transactional(rollbackFor = { SQLException.class, IOException.class,... })
-    ```
+    
     @Transactional(rollbackFor = Exception.class)
     public void saveUser(User user) throws Exception{
         userReposioty.save(user);
         throw new Exception("Checked Exception");   --- it is not necessary to always use throw, there might be a case where we use a method which throws an exception                                                                 automatically. In any case, it has to be handled in the same way.
     }
-    ```
+    
 
 <a name = "Database" />
 
@@ -382,6 +387,7 @@ We can, of course, configure this behavior with the rollbackFor and noRollbackFo
    5) transactionManager & entityManagerFactory is required in the configuration class. We actually set the entityManagerFactory in the transactionManager.
 
 <a name = "ModelMapper" />
+
 ### Model Mapper
 There would be cases where we have sensitive data stored in our database and we don't want everything to go away with get request in such a case we can use **Model Mapper** which is provided by maven.
   - Create a DTO class for model : like an adapter it will just have information then we want to send out.

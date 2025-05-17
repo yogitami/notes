@@ -6,19 +6,19 @@
     - provides embedded servers and provides support for in memory db (h2).
     - pom.xml internally handles the dependencies.
  
-      1. [Annotations](#Annotations)
-      2. [Hibernate Validator](#HibernateValidator)
-      3. [JPAAnnotations](#JPAAnnotations)
-      4. [IOCAndDI](#IOCAndDI)
-      5. [ExceptionHandling](#ExceptionHandling)
-      6. [Service](#Service)
-      7. [Controller](#Controller)
-      8. [POJO](#POJO)
-      9. [Scopes](#Scopes)
-      10. [Transactions](#Transactions)
-      11. [Database](#Database)
-      12. [Model Mapper](#ModelMapper)
-      13. [Security](#Security)
+1. [Annotations](#Annotations)
+2. [Hibernate Validator](#HibernateValidator)
+3. [JPAAnnotations](#JPAAnnotations)
+4. [IOCAndDI](#IOCAndDI)
+5. [ExceptionHandling](#ExceptionHandling)
+6. [Service](#Service)
+7. [Controller](#Controller)
+8. [POJO](#POJO)
+9. [Scopes](#Scopes)
+10. [Transactions](#Transactions)
+11. [Database](#Database)
+12. [Model Mapper](#ModelMapper)
+13. [Security](#Security)
 
 
 <a name = "Annotations" />
@@ -268,10 +268,38 @@ Transactions in Spring : Metadata used for managing transactions in the springbo
   - We can now annotate a bean with @Transactional either at the class or method level. Ususally used with @Service.
   - Configuration :
         - Propagation Type, solation Level, Timeout, readOnly flag (a hint for the persistence provider that the transaction should be read only), Rollback rules.
-        - Rollback happens for runtime, unchecked exceptions only. The checked exception does not trigger a rollback of the transaction. We can, of course, configure this behavior            with the rollbackFor and noRollbackFor annotation parameters.
-        - @Transactional(rollbackFor = { SQLException.class })
   - Only public methods should be annotated with @Transactional.
   - Spring creates proxies for all the classes annotated with @Transactional that's why only external calls will be intercepted. Any self invocation calls will not start transaction.
+
+  - **IMP** Example Transaction :
+    ```
+    @Service
+    public class UserService{
+        @Transactional // Proxy is created on class level
+        public void saveUser(User user){
+            userReposioty.save(user);
+        }
+        public void createUser(){  // INCORRECT
+            saveUser(new User());
+        }
+    }
+    ```
+So what happened above is that, when we are calling the saveUser in the same class then the proxy is not created and hence the transactional doesn't work. To make it work we need to call saveUser(User user) from some other class managed by Spring IOC.
+
+    - @Transactional(propogation = Propogation.NEVER) //INCORRECT, transaction will never work. Use proper Propogation level.
+    - @Transactional(isolation = Propogation.NEVER)
+    
+Rollback happens for runtime, unchecked exceptions only. 
+The checked exception does not trigger a rollback of the transaction. 
+We can, of course, configure this behavior with the rollbackFor and noRollbackFor annotation parameters.
+    - @Transactional(rollbackFor = { SQLException.class, IOException.class,... })
+    ```
+    @Transactional(rollbackFor = Exception.class)
+    public void saveUser(User user) throws Exception{
+        userReposioty.save(user);
+        throw new Exception("Checked Exception");   --- it is not necessary to always use throw, there might be a case where we use a method which throws an exception                                                                 automatically. In any case, it has to be handled in the same way.
+    }
+    ```
 
 <a name = "Database" />
 

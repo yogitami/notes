@@ -227,6 +227,22 @@ spring-boot-starter-validation dependency.
 ### Controller
     - for the parameters in the method, @Valid @RequestBody Department department
 
+<a name = "Scopes" />
+
+### Scopes
+Scopes in Spring : Used with @Bean, @Scope("prototype") or @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+  - Singleton : single application context
+  - Prototype : Person personPrototypeA = (Person) applicationContext.getBean("personPrototype");
+  - Request : Creates a bean instance for a single HTTP request.
+
+    (@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS) or @RequestScope public HelloMessageGenerator requestScopedBean() {
+    return new HelloMessageGenerator();})
+    
+    (@Resource(name = "requestScopedBean"))
+  - Session : Creates a bean instance for http session.
+  - Application : Creates a bean instance for the lifecycle of a ServletContext.
+  - Web socket : Creates a bean instance for a particular WebSocket session.
+
 <a name = "POJO" />
 
 ### POJO & DAO with JPA
@@ -248,22 +264,6 @@ spring-boot-starter-validation dependency.
     - IDENTITY : mysql, postgres , if sequential order is essential
     - SEQUENCE : mysql,oracle,postgres, if sequentail order is essential
     - TABLE : for full control  
-
-<a name = "Scopes" />
-
-### Scopes
-Scopes in Spring : Used with @Bean, @Scope("prototype") or @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-  - Singleton : single application context
-  - Prototype : Person personPrototypeA = (Person) applicationContext.getBean("personPrototype");
-  - Request : Creates a bean instance for a single HTTP request.
-
-    (@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS) or @RequestScope public HelloMessageGenerator requestScopedBean() {
-    return new HelloMessageGenerator();})
-    
-    (@Resource(name = "requestScopedBean"))
-  - Session : Creates a bean instance for http session.
-  - Application : Creates a bean instance for the lifecycle of a ServletContext.
-  - Web socket : Creates a bean instance for a particular WebSocket session.
 
 <a name = "Transactions" />
 

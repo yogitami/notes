@@ -6,6 +6,7 @@ This pattern is used to define and describe how objects are created at class ins
 #### Singleton :
    - Default time of bean in springboot.
    - Only one instance of class is created.
+   - We can break Singleton by using Reflection, Cloneable and also Singleton if we don't rewrite the readResolve() method.
    - How to create a Singleton class?
        - Create private constructor
        - Create only getter method, no setter method
@@ -68,12 +69,17 @@ This pattern is used to define and describe how objects are created at class ins
   - Lombok , use @Builder over the class you want to create the builder for and make all the fields as private final
   - Order.builder().id(..).name(..).build();
     
-#### Prototype : Cloneable
+#### Prototype : 
+   - Cloneable
+   - To be used when object creation is costly.
+   - Here we can cache the object and return its clone on next request.
 
 ### Structural
+- how to assemble different parts of the system so that changes in one doesn't affect the entire system.
 
 #### Proxy Pattern :
-  - Useful to reduce expensive API calls.
+  - Useful to reduce expensive API calls. Used to check for authentication.
+  - Advantages : access control/protection given by proxy object, caching, logging
   - Ex: Suppose you have a third party API for payment & you allow user to check the status of payment. Now the third party charges some amount for every API call to them so you will be charged very big amount. In this case use Proxy Pattern to reduce the API calls to reduce unnecessary API calls while ensuring upto date transaction status.
   - You use Caching (Proxy pattern) in this case.
   - @Transactional in Springboot works on this pattern.
@@ -106,6 +112,83 @@ This pattern is used to define and describe how objects are created at class ins
     } 
     ```
 #### Decorator Pattern :
+   - Allow behaviour to be added to individual objects either dynamically, without affecting the behaviour of the other objects from the same class
+   - Extend or modify the behaviour at runtime .i.e. allows dynamic addition of responsibilities to objects without modifying their exisitng code.
+   - Aggregation or composition(dynamic) : PART OF relationship
+   - Cabilities of inheritance with subclasses.
+   - Supports open close principle
+   - It allows developers to compose objects with different combinations of functionalities at runtime.
+   - It is to be used when we want to avoid having too many different classes for all the possible combinations of features.
+   - Ex: InputStream, OutputStream, Reader, Writer, etc.
+   - Ex : video streaming platform , where video content is the base content and other features such as enable subtitle, subtitle language, video quality, etc are decorators.
+   - Ex :
+        Suppose we are building a coffee shop application where customers can order different types of coffee. Each coffee can have various optional add-ons such as milk, sugar, whipped cream, etc. We want to implement a system where we can dynamically add these add-ons to a coffee order without modifying the coffee classes themselves.
+
+     ```
+     interface Coffee ---- getDescription(),getCost()
+        |-- PlainCoffee
+        |-- CoffeeDecorator (abstract class) which implements Coffee and also holds its reference
+              |-- MilkDecorator (have a parameterised constructor which uses super to refer to parent)
+              |-- SugarDecorator () (have a parameterised constructor which uses super to refer to parent)
+
+        public abstract class CoffeeDecorator implements Coffee {
+          protected Coffee decoratedCoffee;
+      
+          public CoffeeDecorator(Coffee decoratedCoffee) { this.decoratedCoffee = decoratedCoffee;}
+      
+          @Override
+          public String getDescription() { return decoratedCoffee.getDescription();}
+      
+          @Override
+          public double getCost() { return decoratedCoffee.getCost();}
+
+         // MilkDecorator.java
+            public class MilkDecorator extends CoffeeDecorator {
+                public MilkDecorator(Coffee decoratedCoffee) {
+                    super(decoratedCoffee);
+                }
+            
+                @Override
+                public String getDescription() {
+                    return decoratedCoffee.getDescription() + ", Milk";
+                }
+            
+                @Override
+                public double getCost() {
+                    return decoratedCoffee.getCost() + 0.5;
+                }
+            }
+
+         // SugarDecorator.java
+            public class SugarDecorator extends CoffeeDecorator {
+                public SugarDecorator(Coffee decoratedCoffee) {super(decoratedCoffee);}
+            
+                @Override
+                public String getDescription() {return decoratedCoffee.getDescription() + ", Sugar";}
+            
+                @Override
+                public double getCost() {return decoratedCoffee.getCost() + 0.2;}
+            }
+
+        // Main class
+        Coffee coffee = new PlainCoffee();
+        Coffee milkCoffee = new MilkDecorator(new PlainCoffee());
+        Coffee sugarMilkCoffee = new SugarDecorator(new MilkDecorator(new PlainCoffee()));
+
+        or we can also use the same object
+        Coffee coffee = new PlainCoffee();
+        coffee = new MilkDecorator(coffee);
+        coffee = new SugarDecorator(coffee);
+         
+     ```
+**famous question is Pizza question where we need to add different toppings on Pizza** 
+     
+
+#### Flyweight Pattern :
+   - is a shared object that can be used in multiple contexts simultaneously.
+   - Use : applciation needs large number of objects that share most of the common attribute.
+   - Memory consumption by shared objects.
+   - Ex : Integer.valueOf(int) -- returns cached object instead of creating new
 
 #### Adapter Pattern : 
   - Adapter Pattern is particularly useful for integrating classes with incompatible interfaces. (Just like a normal adapter)
@@ -136,3 +219,39 @@ This pattern is used to define and describe how objects are created at class ins
   
 
 ### Behavioural
+   - Assignment of responsibilities between objects.
+     
+#### Template Pattern :
+   - defines the skeleton of an algorithm in the superclass but let subclasses override the specific steps of the algo without changing it's structure.
+   - Ex: JDBCTemplate -> execute() method -- accepts a callback obj that defines the SQL statement to execute & parameters to pass the statement.
+   - JDBCTemplate takes care of all the opening/closing db connections,executing the statement and handling exceptions. We pass the datasource to the JDBCTemplate constructor.
+   - Concept of abstract class works like this.
+
+#### Observer Pattern :
+   - Allows one object to observe the changes in another object & react to those changes.
+   - Kafka & RabbitMQ
+   - EventListener
+
+#### Strategy Design Pattern :
+   - Selecting an algo at runtime.
+   - Comparator works on this.
+   - Implementation :
+        1. Make an interface and it's implementing classes.
+        2. Make a strategy class which will take the parent interface as variable and use this keyword for it's construction. It has two methods : change the stategy at runtime & execute()
+    
+
+## Design Patterns in Microservices.
+
+#### API Gateway
+#### 
+
+
+
+
+
+
+
+
+
+
+

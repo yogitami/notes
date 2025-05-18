@@ -76,6 +76,8 @@ This pattern is used to define and describe how objects are created at class ins
 
 ### Structural
 - how to assemble different parts of the system so that changes in one doesn't affect the entire system.
+- They help organize relationships between objects, making systems more flexible, reusable, and maintainable.
+- focus on how classes and objects are arranged to create larger, more complex structures
 
 #### Proxy Pattern :
   - Useful to reduce expensive API calls. Used to check for authentication.
@@ -220,6 +222,12 @@ This pattern is used to define and describe how objects are created at class ins
 
 ### Behavioural
    - Assignment of responsibilities between objects.
+   - focus on how objects and classes interact and communicate
+
+#### State Method Design Pattern
+   - When an object modifies its behavior according to its internal state, the state design pattern is applied.
+   - If we have to change the behavior of an object based on its state, we can have a state variable in the Object and use the if-else condition block to perform different actions based on the state.
+   - Used in CQRS with event sourcing.
      
 #### Template Pattern :
    - defines the skeleton of an algorithm in the superclass but let subclasses override the specific steps of the algo without changing it's structure.
@@ -229,29 +237,158 @@ This pattern is used to define and describe how objects are created at class ins
 
 #### Observer Pattern :
    - Allows one object to observe the changes in another object & react to those changes.
+   - It establishes a one-to-many dependency between objects, meaning that all of the dependents (observers) of the subject are immediately updated and notified when the subject changes.
    - Kafka & RabbitMQ
    - EventListener
+   - Ex : Consider a scenario where you have a weather monitoring system. Different parts of your application need to be updated when the weather conditions change.
+     ```
+     public interface Subject {
+          void addObserver(Observer observer);
+          void removeObserver(Observer observer);
+          void notifyObservers();
+      }
+
+     public interface Observer {
+       void update(String weather);
+      }
+
+     public class WeatherStation implements Subject {
+          private List<Observer> observers = new ArrayList<>();
+          private String weather;
+      
+          @Override
+          public void addObserver(Observer observer) {observers.add(observer);}
+      
+          @Override
+          public void removeObserver(Observer observer) {observers.remove(observer);}
+      
+          @Override
+          public void notifyObservers() {
+              for (Observer observer : observers) {observer.update(weather);}
+          }
+      
+          public void setWeather(String newWeather) {
+              this.weather = newWeather;
+              notifyObservers();
+          }
+      }
+
+        public class PhoneDisplay implements Observer {
+          private String weather;
+      
+          @Override
+          public void update(String weather) {
+              this.weather = weather;
+              display();
+          }
+      
+          private void display() {System.out.println("Phone Display: Weather updated - " + weather);}
+      }
+
+      class TVDisplay implements Observer {
+       private String weather;
+    
+       @Override
+       public void update(String weather) {
+           this.weather = weather;
+           display();
+       }
+    
+       private void display() { System.out.println("TV Display: Weather updated - " + weather); }
+      }
+
+     // Main
+     WeatherStation weatherStation = new WeatherStation();
+      Observer phoneDisplay = new PhoneDisplay();
+      Observer tvDisplay = new TVDisplay();
+      weatherStation.addObserver(phoneDisplay);
+      weatherStation.addObserver(tvDisplay);
+        // Simulating weather change
+      weatherStation.setWeather("Sunny");
+     ```
 
 #### Strategy Design Pattern :
    - Selecting an algo at runtime.
    - Comparator works on this.
+   - Ex : different sort algo at runtime, different emailing system to send emails
    - Implementation :
         1. Make an interface and it's implementing classes.
         2. Make a strategy class which will take the parent interface as variable and use this keyword for it's construction. It has two methods : change the stategy at runtime & execute()
+    
+     ```
+     Enum EncodingPatternEnum ---> MD5,SHA1,SHA2
+     interface Encryption ---> void encrypt(String), EncodingPatternEnum getEncryptionType()
+        |-- MD5Encryption
+        |-- SHA1Encryption
+        |-- SHA2Encryption
+
+     EncryptionFactory --->
+           Map<EncodingPatternEnum,Encryption> map;
+            public EncryptionFactory(Set<Encryption> encryptionTypeSet){
+              createStrategy(encryptionTypeSet);
+           }
+           private void createStrategy(Set<Encryption> encryptionTypeSet){
+              map = new HashMap<EncodingPatternEnum,Encryption>();
+              encryptionTypeSet.stream().forEach(m -> map.put(encryptionTypeSet.getEncryptionType,encryptionTypeSet));
+           }
+           public Encryption findEncryptionType(EncodingPatternEnum epn){
+              return map.get(epn);
+           }
+
+        // Controller
+           @Autowired EncryptionFactory ef;
+           // call in getmapping which accepts EncodingPatternEnum as argument
+           ef.findEncryptionType(epn).encrypt("testing);
+     ```
     
 
 ## Design Patterns in Microservices.
 
 #### API Gateway
-#### 
+- Single point of entry for all the clients
+- We can also use Zuul API gateway : @EnableZuulProxy, @EnableDiscoveryClient
+- For spring cloud gateway :
+     - We can perform authentication here and also modify request and response.
+     - Spring cloud gateway forwards requests to a Gateway Mapping, which determines what should be done with requests matching a specific route.
+     - Route configuration can be resolved by using RouteLocator. Create a Bean of it. We have to add thhe host,filters,uril etc. It uses builder design pattern.
+     - We can create RouteLocator either by using @Bean or by using properties configuration (dynamic routing).
 
+#### Service Registry & Discovery Pattern
+   - A service registry keeps track of all the services in the system, making it easier for them to find each other.
+   - Every service needs to regsiter itself with service registry when it starts up & deregister when it shuts down.
+   - We don't need to hardcode hostnames and port like this --- Eureka Integration
+   - Ex :
+      - 3 services & a netflix eureka discovery server using spring cloud.
+      - Server will have spring-cloud-starter-netflix-eureka-server dependency and client services will have spring-cloud-starter-netflix-eureka-client dependency.
+      - Add @EnableEurekaServer with the discovery server class & also set other properties in property file like eureka instance hostname, client.enabled= true, service url,server.port,etc.
+      - In services too, add some properties to enable the interaction.
+      - To call Service A from Service B, we need to @EnableEurekaClient and we would need a DiscoveryClient & restclient. And call the service using them.
+      - Service Registry : Every microservice registers itself with Eureka Server.
+      - Service Discovery : One microservice discovers another microservice with the help of its entry in Eureka Server.
 
-
-
-
-
-
-
+#### CQRS
+   - Separates read(query) & write(command) operations into different models.
+   - This can involve using distint methods,objects or even separate dbs for handling data retrieval & data modification operations.
+   - Uses kafka generally.
+     
+#### SAGA
+   - A SAGA is a sequence of local transactions where each transaction updates data within a single service. If one transaction fails, saga ensure that the overall business transaction is rolled back through compensatory transaction.
+#### Circuit Breaker
+   - This pattern prevents a network/service failure from cascading to other services. If a service fails to respond, the circuit breaker trips and the call is redirected or fails gracefully.
+   - Resilience4j integration
+   - Hystrix
+   - States : Closed(idel),open,half-open
+   - Circuit breaker types : count-based, time-based
+   - Implementation :
+        - add the resilience4j-spring-boot2 & resilience4j-reactor dependency.
+        - In Controller
+          ```
+          @GetMapping("..")
+          @CircuitBreaker(name = "..",fallbackMethod = "getInvoiceFallBack")
+          public String getInvoice() {....}
+          public String getInvoiceFallBack(Exception e) { return "some string"; }
+          ```
+        - add properties for resilience4j in applicaiton.properties.
 
 
 

@@ -271,6 +271,13 @@ Scopes in Spring : Used with @Bean, @Scope("prototype") or @Scope(value = Config
 Transactions in Spring : Metadata used for managing transactions in the springboot application.
   - We can either enable it by adding @EnableTransactionManagement with configuration class or it will be enabled by default if we have spring-data-* or spring-tx dependencies.
   - We can now annotate a bean with @Transactional either at the class or method level. Ususally used with @Service.
+  - ACID
+    - Atomicity : all or nothing
+    - Consistency : ensures that our transaction takes a system from one consistent state to another consistent state.
+    - Isolation : changes that we perform within a transcation are not visible to anyother transaction until we commit them successfully.
+    - Durability : ensures that committed changes get persisted.
+  - Propogation :
+    - REQUIRED is default type. Method needs a transaction either open a new one if it doesn't exist or use the existing one.
   - Configuration :
         - Propagation Type, solation Level, Timeout, readOnly flag (a hint for the persistence provider that the transaction should be read only) -- @Transactional(readOnly = true) , Rollback rules.
   - Only public methods should be annotated with @Transactional.

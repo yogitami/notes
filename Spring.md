@@ -311,12 +311,21 @@ We can, of course, configure this behavior with the rollbackFor and noRollbackFo
 ### Database
 1) H2 :
   - add the spring-boot-starter-data-jpa and h2 dependency.
-  - spring.h2.console.enabled=true,spring.data.source.url, username, password, spring.jpa.properties.hibernate.dialect, spring.jpa.hibernate.ddl-auto=update
+  - spring.h2.console.enabled=true,spring.data.source.url, username, password, spring.jpa.properties.hibernate.dialect, spring.jpa.hibernate.ddl-auto=update, spring.jpa.generate-ddl=true.
     
 2) MySQL :
   - spring.jpa.hibernate.ddl-auto=update, spring.jpa.show-sql=true, spring.data.source.url, username, password, spring.datasource.driver-class-name
 
-3) Database configuration for springboot
+3) Flyway database migration
+   - In my project, database schema is maintained by using flyway but insertion and updation happens using JPA.
+   - Built around a linear db versioning system.
+   - flyway-core dependency & add the location of the sql files in property file
+   - set the flyway enabled in spring to true
+   - Purpose of flyway is to establish a consistent sequence of migrations that always result in the same db state.
+   - Flyway tracks the applied migrations in a metadata table called flyway_schema_history ensuring they are executed only once.
+   - 
+
+4) Database configuration for springboot
       - We would need a DatabaseConfig class, the class will look like below.
           ```
             @Configuration
@@ -378,13 +387,14 @@ We can, of course, configure this behavior with the rollbackFor and noRollbackFo
                 }
             }
           ```
-   4) In repository class,
+   5) In repository class,
       ```
         @Async
         @Query("SELECT contest.contestName FROM Contest contest where contest.id = :id") 
         Future<String> findContestAsyncById(@Param("id") Long id); 
       ```
-   5) transactionManager & entityManagerFactory is required in the configuration class. We actually set the entityManagerFactory in the transactionManager.
+   6) transactionManager & entityManagerFactory is required in the configuration class. We actually set the entityManagerFactory in the transactionManager.
+   
 
 <a name = "ModelMapper" />
 

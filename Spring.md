@@ -263,7 +263,23 @@ Scopes in Spring : Used with @Bean, @Scope("prototype") or @Scope(value = Config
     - AUTO : automatically assigns the strategy based on type of db used.
     - IDENTITY : mysql, postgres , if sequential order is essential
     - SEQUENCE : mysql,oracle,postgres, if sequentail order is essential
-    - TABLE : for full control  
+    - TABLE : for full control
+
+3. ** N+1 Problem **
+    - N+1 query problem happens when hibernate or JPA executes one query to fetch the parent entities(N) & then executes N separate queries to fetch the associated child entities.
+    - Ex : Department and List<Employee> ---> one to many mapping, if we execute findAll() on departmentRepo then N number of queries for employee  & 1 for department.
+    - FIX : JOIN_FETCH :
+      - @Query("SELECT d from Department d JOIN FETCH d.employees") List<Department> findAllWithEmployees(); --- only one query executes
+      - SELECT d.*,e.* FROM department d LEFT JOIN employee e ON d.id = e.department_id;
+    - FIX : Using EntityGraph **good option**, @BatchSize(size=10) used in model class.
+
+4. Soft delete implementation in JPA/Hibernate.
+   - It means making a record as inactive instead of physically deleting it from the database. This is useful when we want to retain historical data or recover deleted record.
+   - Add a isDeleted flag and istead of deleting a record, update the flag to true.
+     ```
+     softDeleteUser(Long userId) ---> findbyId and if found then set deleted to true and do a entityManager.merge(user) // Marks as deleted instead of removing
+     ```
+   - We have to also make sure that those entities do not get fetched then use @Where(clause = "is_deleted = false") with @Entity
 
 <a name = "Transactions" />
 
@@ -402,7 +418,6 @@ We can, of course, configure this behavior with the rollbackFor and noRollbackFo
       ```
    6) transactionManager & entityManagerFactory is required in the configuration class. We actually set the entityManagerFactory in the transactionManager.
    
-
 <a name = "ModelMapper" />
 
 ### Model Mapper

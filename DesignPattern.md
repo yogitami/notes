@@ -86,7 +86,7 @@ This pattern is used to define and describe how objects are created at class ins
   - You use Caching (Proxy pattern) in this case.
   - @Transactional in Springboot works on this pattern.
     **Design**
-      - Create a proxy later : which will add as an intermediary between your application & third party payment API. This proxy will cache the transaction status responses, and before forwarding the request to the third party service, it will check whether the transaction status is already cached.
+      - Create a proxy later : which will add as an intermediary between your application & third party payment API. This proxy will cache the transaction status responses, and before forwarding the request to the third party service, it will check whether the transaction status is already cached. (Zomato)
       - Caching Mechanism :
         The cache will store the transaction statuses, and a cache expiration time will be set to ensure that the information is periodically refreshed.
     ```
@@ -113,6 +113,7 @@ This pattern is used to define and describe how objects are created at class ins
 
     } 
     ```
+    - if we are not allowed to go into the Zomato code to add the caching functionality. It can be done using decorator pattern. In case of spring boot, we can use @Cacheable
 #### Decorator Pattern :
    - Allow behaviour to be added to individual objects either dynamically, without affecting the behaviour of the other objects from the same class
    - Extend or modify the behaviour at runtime .i.e. allows dynamic addition of responsibilities to objects without modifying their exisitng code.

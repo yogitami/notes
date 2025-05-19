@@ -401,7 +401,26 @@ This pattern is used to define and describe how objects are created at class ins
   - Return last successful response from cache in the fallback method.
   - Use Asynchronous processing for non critical requests.
 
-2. 
+2. In an ecommerce application, an order service calls payment and inventory services. How do you ensure that the order is placed only if both payment and inventory upadtes are successful ?
+   - **Solution 1**SAGA Design pattern :
+     - Saga consists of two approaches :
+       - Choreography (Event-driven)
+         - Decentralised approach where each service knows what to do and reacts to events or changes on its own. Service work independently but still cooperate by responding to each other's events.
+         - Steps :
+           1. Event Driven : Each service listens for events from other services to trigger their own actions. Ex: after the **Payment Service** completes, it publishes an event "PaymentCompleted" that other services(like Shipping or Inventory) listen to and react to.
+           2. No Central Controller : No central orchestrator. Services are aware of their actions and dependencies through the event bus (Kafka or RabbitMQ) and they don't need a central authority to guide them.
+           3. Loose coupling : The services don't need to care about each other's internal workings, just the events they care about.
+           4. Independent execution : Each service is responsible for its own tasks.
+           5. Each service handles their own failure.
+              
+       - Orchestration (Centralized controller)
+         - It is like a central conductor. A central service or orchestrator controls the entire workflow and tells each service what to do in a specific order.
+         - Steps :
+           1. Central Controller(orchestrator) : A central service or component controls the flow of events or tasks and makes decisions.
+           2. Service Invocation : The orchestrator tells each service what to do and in what order.
+           3. Coorination : The orchestrator waits for each service to finish its task before moving to the next. It ensures that if any service fails, the process can be stopped or retired.
+           4. Centralized Control : The orchestrator has the full control and logic of the workflow. All communicatiion goes through it. Any errors or retries are also handled by the orchestrator.
+              Ex: Starts the registration user and regsiters successfully. The orchestrator then passes the command to inventory service to check the inventory. If the inventory is available then it asks for the payment from the user. If the payment is received then orchestrator arrange the shipment. If shipment is confirmed, then orchestrator sends the acknowledge to the user. Or if the inventory is not available then notify the user.
 
 
 

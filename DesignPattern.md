@@ -376,6 +376,8 @@ This pattern is used to define and describe how objects are created at class ins
    - A SAGA is a sequence of local transactions where each transaction updates data within a single service. If one transaction fails, saga ensure that the overall business transaction is rolled back through compensatory transaction.
 #### Circuit Breaker
    - This pattern prevents a network/service failure from cascading to other services. If a service fails to respond, the circuit breaker trips and the call is redirected or fails gracefully.
+   - It is used in case of failure of synchronous REST request chain.
+   - In a microservice architecture, the circuit breaker monitors calls between services. If one service is failing (it's too slow or unavailable) the circuit breaker opens and stops the system from trying to call that service repeatedly. This helps avoid overloading the failing service & gives it time to recover. Once the service seems to be working again (after a timeout or a check), the circuit breaker closes and the system can try calling the service again. We use resilience4j circuit breaker to monitor failures and temporary stops calls to the failing service.
    - Resilience4j integration
    - Hystrix
    - States : Closed(idel),open,half-open
@@ -385,11 +387,21 @@ This pattern is used to define and describe how objects are created at class ins
         - In Controller
           ```
           @GetMapping("..")
-          @CircuitBreaker(name = "..",fallbackMethod = "getInvoiceFallBack")
-          public String getInvoice() {....}
+          @CircuitBreaker(name = "serviceName",fallbackMethod = "getInvoiceFallBack")
+          public String getInvoice() {....} // here we are calling some other service (Rest call)
           public String getInvoiceFallBack(Exception e) { return "some string"; }
           ```
         - add properties for resilience4j in applicaiton.properties.
+
+#### Scenario based Question : 
+1. You have multiple microservices communicating synchronous via REST. A service in the middle of the request chain fails. How do you handle failure recover and ensure data consistency.
+  - Resilience Patterns : Circuit Breaker.
+  - Use Retry mechanism for temporary failure like Spring Retry. (@Retryable(value = {HttpServerErrorException.class}, maxAttempts = 3, backoff = @Backoff(delay = 200)))
+  - set timouts to avoid blocking request. So while configuring about REST api client,etc we can set connection timeouts and read timeouts.
+  - Return last successful response from cache in the fallback method.
+  - Use Asynchronous processing for non critical requests.
+
+2. 
 
 
 

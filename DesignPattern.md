@@ -402,7 +402,7 @@ This pattern is used to define and describe how objects are created at class ins
   - Use Asynchronous processing for non critical requests.
 
 2. In an ecommerce application, an order service calls payment and inventory services. How do you ensure that the order is placed only if both payment and inventory upadtes are successful ?
-   - **Solution 1**SAGA Design pattern :
+   - **Solution 1** SAGA Design pattern :
      - Saga consists of two approaches :
        - Choreography (Event-driven)
          - Decentralised approach where each service knows what to do and reacts to events or changes on its own. Service work independently but still cooperate by responding to each other's events.
@@ -421,6 +421,53 @@ This pattern is used to define and describe how objects are created at class ins
            3. Coorination : The orchestrator waits for each service to finish its task before moving to the next. It ensures that if any service fails, the process can be stopped or retired.
            4. Centralized Control : The orchestrator has the full control and logic of the workflow. All communicatiion goes through it. Any errors or retries are also handled by the orchestrator.
               Ex: Starts the registration user and regsiters successfully. The orchestrator then passes the command to inventory service to check the inventory. If the inventory is available then it asks for the payment from the user. If the payment is received then orchestrator arrange the shipment. If shipment is confirmed, then orchestrator sends the acknowledge to the user. Or if the inventory is not available then notify the user.
+
+   - **Solution 2** Use Outbox Pattern
+     - This pattern makes sure that events are only sent out after a task is successfully completed.
+     - Outbox table : A special table that stores events (like "order created") that need to be sent to another service (like payment or inventory).
+     - Event relay(background worker) checks this table regularly and sends the event to the right service (like Kafka).
+     - If the system crashes, the event is safe because it's still in the db (the outbox). So the system can try again later to send the event.
+     - It holds the updated status of the event.
+     - Avoids inconsistencies by making sure that if anything goes wrong, the system can retry and won't lose data.
+     - Exactly once delivery, it ensures that the event is only sent once and isn't duplicated.
+
+   - **Solution 3** Dead Letter Queues : special queues to handle the failed transactions(even if retrying). Can be worked on with Kafka and RabbitMQ.
+
+3. Your application exposes multiple microservices to the outside world. How would you ensure security,rate limiting and request validation at the entry point?
+
+   - We can implement all these three things using the API Gateway Pattern.
+    - Security : JWT Authentication
+      - All the incoming requests will need a valid JWT token to be processed.
+   - Rate Limiting(Redis) : Bucket4j in spring cloud gateway to throttle requests beased on IP or user.
+     - When the user sends API requests. Redis keeps a track of how many requests they have made. If they exceed the specified limit (like 10 per second), new requests are throttled(delayed) or blocked.
+     - This ensures that system is not overloaded.
+   - Request validation : We can validate all the incoming request using Spring Validation annotation(@Valid,@NotNull,etc.)
+   - We can also implement Custome request validation and custom authentication filter using Spring cloud gateway.
+
+4. How would you secure the inter-service communication in a microservice architecture.
+   1. Mututal TLS (mTLS) :
+     - It is a mechanism in which both client and server authenticate each other using certificates.
+     - How does it work ?
+       - Service A sends a request to Service B.
+       - Service B presents its TLS certificate to prove its identity.
+       - Service A also presents its TLS certificate to prove its identity.
+       - if both certificates are valid, they establish a secure connection and start communication otherwise the connection is not established.
+      - Steps :
+        - Generate and distribute certificates to all the services in your microservice ecosystem.(using open SSL)
+        - Configure(in property file) each microservice to present its certificate when making requests and verify the certificate of the receiving service.
+
+   2. OAuth2.0/ JWT for service authentication.
+     - Using OAuth 2.0 / JWT to authenticate and authorize service to service communication.
+     - How it works ?
+       - Each service is regsitered with an Identity Provider(IdP) such Auth0, Okta or Keycloak.
+       - When one service wants to communicate with another, it first obtains a JWT token from the IdP(using OAuth 2.0) and includes that token in the request header.
+       - The receiving service validates the JWT tokenn to ensure the request is coming from an authorized service.
+      
+   3. Service Mesh (Istio,Linkerd)
+      - A service mesh provides a dedicated infrastructure layer to handle service to service communication,security,observability and many more. Istio is a popular choice for securing inter-service communication with mTLS, traffic management and monitoring.
+      - Services don't talk to each other directly. Instead, a service mesh acts as the "delivery network", managing how services communicate securely,efficiently and reliably.
+
+   4. API Gateway for internal communication
 
 
 

@@ -19,6 +19,7 @@
 11. [Database](#Database)
 12. [Model Mapper](#ModelMapper)
 13. [Security](#Security)
+14. [SpringBoot 3](#SpringBoot)
 
 
 <a name = "Annotations" />
@@ -446,4 +447,49 @@ There would be cases where we have sensitive data stored in our database and we 
 <a name = "Security"/>
 
 ### Security
-    - add the spring-boot-starter-security and @EnableSpringSecurity
+- add the spring-boot-starter-security and @EnableSpringSecurity
+
+<a name = "SpringBoot"/>
+
+### SpringBoot 3.0
+
+**IMP** Keep in mind that if you upgraded one service to springboot 3 but that service has a parent depedency on some other service (ex: for getting JWT tokens) then that service has to be upgraded to springboot 3 as well otherwise everything will break. All the child dependencies have to be moved to springboot 3 then only the parent can be moved to springboot 3. 
+    
+- New Features :
+1. Java 17+ : minimum version required is Java 17
+2. Spring framwork 6, which comes with new features like support for native compilation using GraalVM.
+3. Native Image Support
+4. Jakarta EE 9 : package names changed from javax.* to jakarta.*
+5. Improved DI : constructor injection and nullability
+6. Updated dependencies
+
+- Improving startup time and memory usage
+  - **How ?**
+    - Only the necessary classes are scanned, improving both startup speed and memory usage
+    - Spring AOT (Ahead of time) process -> AOT processing optimizes application's code during build time, which reduces runtime reflection and improves performance (.i.e. if some classes can be loaded on complie time and not necessarily have to be loaded only on runtime then it would be done by AOT).
+    - GraalVM Native Compilation.
+   
+- Impact of Jakarta EE 9 migration in Spring Boot 3.
+  - We use jakarta.* namespace now instead of javax.* (ex: javax.persistence is now jakarta.persistence)
+ 
+- If we talk in terms of configuration improvements and database then there is not much improved between springboot 2 and springboot 3. Some  minor improvements are :
+  - Enhanced support for JAVA records in configuration (Java records are a part of Java 17)
+  - Improved validation mechanisms & error handling.
+  - Better integrations with Jakarta EE.
+  - Flyway has to be upgraded to Jakarta EE compatibility.
+ 
+-  Spring boot 3 simplifies authentication with JWT,OAuth2.0 and OpenID Connect. WebSecurityConfigurationAdapter is deprecated. In terms of configuration, we configure a bean has to be created for SecurityFilterChain with no @EnableWebSecurity and with no WebSecurityConfigurationAdapter.
+
+#### Difference between Flyway and Liquibase.
+- Flyway uses SQL scripts.
+- Liquibase uses XML/YAML changelog.
+- Flyway is more SQL-centric.
+- Liquibase offers more database-agnostic migrations.
+- property file :
+  - flyway :
+    spring.flyway.locations=classpath:db/migration
+    spring.flyway.baseline-on-migration=true
+  - liquibase :
+    spring.liquibase.change-log=classpath:db/changelog/db.changelog-master.xml
+
+

@@ -19,4 +19,4 @@
   3. How can you externalise the configuration properties.
      - By using applicaition.property file & then using @Value("${property key name}") in the code to use it.
      - By using environment variables.
-     - 
+     - VM options

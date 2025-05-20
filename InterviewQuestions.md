@@ -147,6 +147,8 @@
          - use tools like jenkins
          - use docker to containerize each microservice and kubernetes for its management
          - blue/green deployment
+        
+ 6. How to maintain session between microservices.
 
 
               

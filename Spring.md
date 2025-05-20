@@ -64,7 +64,7 @@ consumes = MediaType.APPLICATION_JSON_VALUE)
 <a name = "HibernateValidator" />
 
 ### Validation using Hibernate Validator
-spring-boot-starter-validation dependency.
+spring-boot-starter-validation dependency and hibernate-validator.
 1. @NotNull(message = "Enter a valid Employee Id")
 2. @NotEmpty(message = "Must not be Empty and NULL")
 3. @NotBlank(message = "employee name can't be left empty")

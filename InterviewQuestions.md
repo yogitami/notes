@@ -75,7 +75,79 @@
           - Use strangler pattern to migrate from monolith to microservice over time
          
 5. How to handle the data consistency across services in a distributed system.
-   1. Clarify the consistency requirements.
+   1. Strong consistency :
+      1. 2 PC
+      2. 3 PC
+   2. Eventual Consistency with event sourcing and CQRS :
+      - We use patterns like event sourcing with CQRS where eventual consistency is acceptable.
+      - In event sourcing, every change is captured as an immutable event, which can be replicated and processed asynchronously across distributed systems.
+      - CQRS can help by separating read and write workloads, which allows you to scale them independently and handle eventual consistency on the write side, while maintaining fast reads.
+    3. Distributed Transactions (SAGA Pattern) :
+       - In a microservice system, where services are typically decoupled and don't share a single database, you can use SAGA pattern. This is a sequence of local transactions, where each service involved in the saga performs its transactions and publishes an event. If a step fails, compensation actions are taken to revert the previous steps. SAGA provides a way to handle long-running transactions in a distributed system without locking resources.
+    4. Idempotency and Retries :
+       - When desiging APIs ad services, ensure that operations are idempotent. This helps avoid data duplication in case of retries.
+    6. Event driven architecture :
+       - Leveraging this architecture allows for reliable event propogation across services. With event driven systems, services communicate via events, which ensures that the state is updated asynchronously, promting eventual consistency.
+
+6. Challenges you faced when implementing microservices, and how do you address them ?
+   1. Complexity in service communication :
+      - As the number of microservices grow, so does the complexity of communication between them. Microservices often need to interact with one another through APIs, leading to potential issues like :
+      - Sync communication causes bottlenecks
+      - Unreliable communication leading to cascading failures
+      - Difficulty in managing inter-service dependencies.
+      - Solution :
+        - Async communication.
+        - Event Driven Architecture
+        - API Gateway
+        - Service Mesh
+   3. Data Management and consistency :
+       - Each service typically has its own db, which introduces challenges like
+         - Ensuring all services have the latest and correct data.
+         - Avoid unnecessary duplication of data across services.
+         - Handling complex transactions accross multiple services.
+        - Solution :
+          - CQRS and Event sourcing
+          - SAGA design pattern
+          - event driven design
+          - database per service
+          - data replication : for certain cases, you might replicate data to ensure services have access to the required data. 
+   5. Service Discover & Mangement :
+      - As microservices are deployed across dynamic environment (e.g. un containers or serverless functions), managing their locations(IPs,ports) becomes difficult.
+      - Service discovery becomes critical, especially when services scale up and down or are deployed in the ephermeral environments like Kubernetes or AWS Lambda.
+      - Managing the state and health of services is also complex.
+      - Soluton :
+        - Service Discovery : Consul, Eureka or Kubernetes built in service discovery to automatically register and discover services in your application.
+        - Health Checks : Implement health checks (via spring boot actuator or kubernetes liveness/readiness probes) to monitor service health and trigger automatic scaling or restarts as needed.
+        - Centralized Configuration : Use Spring Cloud Config or Consul to manage configuration centrally across services, ensuring consistency and simplifying management.
+   7. Fault tolerance and Resilience :
+      - Distributed systems are inherently prone to failures, whether due to network issues, service crashes or dependency failures. A failure in one service can cascade and bring down the entire system if not properly managed.
+      - Solutions :
+        - Circuit Breaker Pattern
+        - Retries and Backoff
+        - Timeout and Failover
+        - Bulkheads.
+   9. Monitoring , Logging and Debugging :
+       - Solutions :
+         - Use tools like Jaeger, Zipkin to trace requests as they flow across services.
+         - Centralised logging : ELK Stack or Splunk
+         - Metrics and Dashboards : Prometheus with Grafana
+         - Alerting
+   11. Managing Distributed Transactions :
+       - Microservices often need to coordinate actions across different services, which introduces challenges around atomicity,consistency and reliability of transactions.
+       - Solution :
+         - SAGA or Event Driven Transactions (using Kafka)
+   13. Security :
+       - Solution :
+         - API Gateway
+         - OAuth2/JWT : for secure authentication and authorization
+         - Transport security : TLS/SSL
+         - Service Mesh
+   15. CI/ CD :
+       - Solution :
+         - use tools like jenkins
+         - use docker to containerize each microservice and kubernetes for its management
+         - blue/green deployment
+
 
               
     

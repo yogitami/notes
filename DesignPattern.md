@@ -371,6 +371,15 @@ This pattern is used to define and describe how objects are created at class ins
    - Separates read(query) & write(command) operations into different models.
    - This can involve using distint methods,objects or even separate dbs for handling data retrieval & data modification operations.
    - Uses kafka generally.
+   - This separation of read and write helps to optimize performance, scalability and security in distributed systems.
+   - Why CQRS came into picture ?
+      - Scalability issues :
+       - Many databases lock rows or tables while executing queries. Long-running read queries(eg complex join,analytics) can prevent timely updates to data.
+       - Queries rely on indexes for faster lookups, but each write modifies indexes. More reads mean heavier index usage, slowing down insert/update operations.
+       - Reads and writes compete for RAM,CPU and disk I/O. Frequent read queries increase buffer pool usage, leaving fewer resources fir writes.
+     - Denormalised data for reads.
+       - Challenges : data redundancy(same data repeated in multiple places), data inconsistency(changes in one place need to be reflected in all instance of the data).
+     - Strict validatio   
      
 #### SAGA
    - A SAGA is a sequence of local transactions where each transaction updates data within a single service. If one transaction fails, saga ensure that the overall business transaction is rolled back through compensatory transaction.

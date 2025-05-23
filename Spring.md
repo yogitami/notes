@@ -496,10 +496,44 @@ There would be cases where we have sensitive data stored in our database and we 
   - liquibase :
     spring.liquibase.change-log=classpath:db/changelog/db.changelog-master.xml
 
+### Other annotations :
+
+1. @JsonTypeName("CASH_PAYLOAD") @JsonInclude(NON_NULL) public class DetailsPayload implements ActionPayload { .... }
+   - @JsonTypeName("CASH_DIVIDEND_PAYLOAD"):
+     - Specifies the type name to be used when serializing or deserializing this class in JSON.
+     - When this class is serialized, the JSON will include a type identifier with the value "CASH_DIVIDEND_PAYLOAD".
+     - Useful in polymorphic type handling, where multiple classes implement the same interface or extend the same base class (in this case, ActionPayload).
+3. @JsonTypeInfo(use = NAME, property = "type", include = EXTERNAL_PROPERTY) @JsonSubTypes({ @JsonSubTypes.Type(DetailsPayload.class) }) public interface ActionPayload { }
+   - This setup allows Jackson to serialize and deserialize objects of different subtypes (e.g., CashDividendCorporateActionDetailsPayload) based on the type property in the JSON. It is useful for handling polymorphic data structures in APIs or data exchange formats.
+   - @JsonTypeInfo(use = NAME, property = "type", include = EXTERNAL_PROPERTY):
+     - Configures Jackson to handle polymorphic types by including a type identifier in the JSON.
+     - use = NAME: Specifies that the type identifier will be the name of the class (or a custom name defined in @JsonSubTypes).
+     - property = "type": Indicates the JSON property that will hold the type identifier.
+     - include = EXTERNAL_PROPERTY: Specifies that the type property is not part of the object itself but is provided externally in the JSON.
+    - @JsonSubTypes :
+      - Defines the possible subtypes of the ActionPayload interface.
+      - @JsonSubTypes.Type(DetailsPayload.class): Maps the DetailsPayload class as a valid subtype.
+5. @JsonProperty(value = "grossDividend", required = true) BigMoney grossDividend
+6. @JsonCreato :
+   - The @JsonCreator annotation is part of the Jackson library and is used to define a constructor or factory method that Jackson should use when deserializing JSON into an object.
+   - Ex :
+     ```
+     @JsonCreator
+     public User(
+       @JsonProperty("username") String username, @JsonProperty("email") String email) {
+            this.username = username;
+            this.email = email;
+     }
+     ```
+
 <a name = "Hibernate_Mappings"/>
 
 ### Hibernate Mappings
 
-1. 
+1. @OneToOne Mapping
+   - ```
+     public class Account {
+     }
+     ```
 
 

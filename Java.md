@@ -4,7 +4,9 @@
     - A generic term to indicate the relationship between two independent classes.
     - one-to-one, one-to-many, or many-to-many
     - Assocation is different from inheritance
-    - Inheritance is a "IS-A" relation and associatio is a "HAS-A" relationship. (Car IS A Vehicle, Hotel HAS Rooms)
+    - Inheritance is a "IS-A" relation and associatio is a "HAS-A" relationship. (Car IS A Vehicle, Hotel HAS Rooms).
+    - Inheritance : All these examples denote that sub type is in the form of super type creating is-a relationship.
+    - Association : This means the Inter Connection between 2 entities/objects in real world which simply called Association
     - Ex: Bank can have many employees, Teacher and Student
       ```
       // Class 1 // Bank class

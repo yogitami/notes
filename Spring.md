@@ -483,6 +483,7 @@ There would be cases where we have sensitive data stored in our database and we 
 -  Spring boot 3 simplifies authentication with JWT,OAuth2.0 and OpenID Connect. WebSecurityConfigurationAdapter is deprecated. In terms of configuration, we configure a bean has to be created for SecurityFilterChain with no @EnableWebSecurity and with no WebSecurityConfigurationAdapter.
 
 <a name = "FlywayLiquibase"/>
+
 #### Difference between Flyway and Liquibase.
 - Flyway uses SQL scripts.
 - Liquibase uses XML/YAML changelog.
@@ -498,5 +499,7 @@ There would be cases where we have sensitive data stored in our database and we 
 <a name = "Hibernate_Mappings"/>
 
 ### Hibernate Mappings
+
+1. 
 
 

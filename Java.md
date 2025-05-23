@@ -3,6 +3,8 @@
 1) Association :
     - A generic term to indicate the relationship between two independent classes.
     - one-to-one, one-to-many, or many-to-many
+    - Assocation is different from inheritance
+    - Inheritance is a "IS-A" relation and associatio is a "HAS-A" relationship
     - Ex: Bank can have many employees, Teacher and Student
       ```
       // Class 1 // Bank class

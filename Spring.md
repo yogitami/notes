@@ -514,7 +514,7 @@ There would be cases where we have sensitive data stored in our database and we 
       - Defines the possible subtypes of the ActionPayload interface.
       - @JsonSubTypes.Type(DetailsPayload.class): Maps the DetailsPayload class as a valid subtype.
 5. @JsonProperty(value = "grossDividend", required = true) BigMoney grossDividend
-6. @JsonCreato :
+6. @JsonCreator :
    - The @JsonCreator annotation is part of the Jackson library and is used to define a constructor or factory method that Jackson should use when deserializing JSON into an object.
    - Ex :
      ```
@@ -525,6 +525,11 @@ There would be cases where we have sensitive data stored in our database and we 
             this.email = email;
      }
      ```
+7. @Transient :
+   - Marks a field as not being persisted to the database.
+9. dd
+10. ddd
+11. dd
 
 <a name = "Hibernate_Mappings"/>
 

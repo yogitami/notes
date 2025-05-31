@@ -140,7 +140,7 @@
                 institute.getTotalStudentsInInstitute());
         }}
      ```
-4) Composition :
+3) Composition :
    - is a stronger form of aggregation that means ownership and lifecycle dependence; if the whole gets destroyed, then the parts no longer exist. For composition, a good example would be a house and its different rooms; a room cannot exist without a house.
    - **"part-of"** relationship between classes.
    - In composition, both entities are dependent on each other.
@@ -182,3 +182,77 @@
              }
      }
      ```
+
+4) JAVA 21
+   - Sequenced Collection interface : ability to remove/find first and last items and reverse the order in collections with defined encounter order.
+   - Adds geberational collection capability to the Z garbage collector.
+   - record patterns : allows for easier and safer retrieval of data out of a record class
+     ```
+     record Point(int x, int y) {}
+     Point point = new Point(10, 20);
+     if (point instanceof Point(var x, var y)) {
+         System.out.println("x: " + x + ", y: " + y);
+     }
+     ```
+   - Pattern matching for switch : better than using instanceOf
+     ```
+     switch (obj) {
+            case String s -> System.out.println("String: " + s);
+            case Integer i -> System.out.println("Integer: " + i);
+            default -> System.out.println("Unknown type");
+     }
+     ```
+     second example :
+     ```
+     static double getBalanceWithSwitchPattern(Account account) { //  Account is the parent class and others are child class
+        double result = 0;
+        switch (account) {
+            case null -> throw new RuntimeException("Oops, account is null");
+            case SavingsAccount sa -> result = sa.getSavings();
+            case TermAccount ta -> result = ta.getTermAccount();
+            case CurrentAccount ca -> result = ca.getCurrentAccount();
+            default -> result = account.getBalance();
+        };
+        return result;
+    }
+     ```
+   - Virtual threads : lightweight threads that dramatically reduce the effort of writing,maintaining and observing high-throughput concurrent applications.
+     ```
+     var executor = Executors.newVirtualThreadPerTaskExecutor();
+     executor.submit(() -> System.out.println("Hello, Virtual Thread!"));
+     ```
+   - String templates
+    ```
+       String name = "Baeldung";
+       String welcomeText = STR."Welcome to \{name}";
+       System.out.println(welcomeText);
+     ```
+   - unnamed patterns and variables : improves experience of deconstructing records, particularly those with many components.
+
+5) Java 11
+   - New methods to String class : isBlank, lines, strip, stripLeading, stripTrailing, and repeat.
+     ```
+     String multilineString = "Baeldung helps \n \n developers \n explore Java.";
+     List<String> lines = multilineString.lines()
+          .filter(line -> !line.isBlank())
+          .map(String::strip) // strip is similar to trim() method of string
+          .collect(Collectors.toList());
+     assertThat(lines).containsExactly("Baeldung helps", "developers", "explore Java.");
+     ```
+   - New static File methods : readString, writeString
+   -  java.util.Collection interface contains a new default toArray method which takes an IntFunction argument :
+     ```
+     List sampleList = Arrays.asList("Java", "Kotlin");
+     String[] sampleArray = sampleList.toArray(String[]::new);
+     ```
+   - The not predicate method
+     ```
+     List<String> sampleList = Arrays.asList("Java", "\n \n", "Kotlin", " ");
+     List withoutBlanks = sampleList.stream()
+          .filter(Predicate.not(String::isBlank))
+          .collect(Collectors.toList());
+     assertThat(withoutBlanks).containsExactly("Java", "Kotlin");
+     ```
+   - We don’t need to compile the Java source files with javac explicitly anymore. Just run using java command.
+   - In lambda expressions, var variables are used.
+   - With the help of the asMatchPredicate() method, pattern recognition is possible

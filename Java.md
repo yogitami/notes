@@ -214,7 +214,7 @@
             default -> result = account.getBalance();
         };
         return result;
-    }
+        }
      ```
    - Virtual threads : lightweight threads that dramatically reduce the effort of writing,maintaining and observing high-throughput concurrent applications.
      ```
@@ -229,7 +229,79 @@
      ```
    - unnamed patterns and variables : improves experience of deconstructing records, particularly those with many components.
 
-5) Java 11
+5) Java 17
+   - Sealed Classes (Finalized) — Restrict class inheritance.
+     ```
+     // Sealed class allowing only specific subclasses
+        public sealed class Vehicle permits Car, Bike {
+            public void start() {
+                System.out.println("Vehicle is starting...");
+            }
+        }
+        
+        // Permitted subclass
+        final class Car extends Vehicle {
+            public void drive() {
+                System.out.println("Car is driving...");
+            }
+        }
+        
+        // Permitted subclass
+        public non-sealed class Bike extends Vehicle {
+            public void ride() {
+                System.out.println("Bike is riding...");
+            }
+        }
+
+         // ✅ Allowed: ElectricBike can extend Bike (since Bike is non-sealed)
+        public class ElectricBike extends Bike {}
+        
+        // ❌ The following will cause a compilation error
+        // class Truck extends Vehicle {} // Not permitted!
+     ```
+    - Pattern matching for switch
+      ```
+      static void process(Object obj) {
+        switch (obj) {
+            case Integer i -> System.out.println("Integer: " + (i * 2));
+            case String s -> System.out.println("String: " + s.toUpperCase());
+            case Double d -> System.out.println("Double: " + (d + 10.5));
+            case null -> System.out.println("Null value provided!");
+            default -> System.out.println("Unknown type!");
+            }
+        }
+      ```
+    - Records : Before records, we had to manually write constructors, getters, toString(), equals(), and hashCode(), making the code verbose.
+      - Records are immutable data classes, They simplify the creation of data-carrying classes by automatically providing:
+        - Immutable fields (no setters).
+        - Generated constructor, equals(), hashCode(), and toString().
+          ```
+          public record Employee(String name, int age) {
+            public String greet() {
+                return "Hello, my name is " + name + " and I am " + age + " years old.";
+            }
+          }
+          ```
+    - Text Blocks – Multi-line string literals (""")
+      ```
+      String json = """
+        {
+          "name": "Alice",
+          "age": 25,
+          "city": "New York"
+        }
+        """.stripIndent();
+        System.out.println(json);
+      ```
+    - InstanceOf
+      ```
+      Object obj = 42;
+        if (obj instanceof Integer num && num > 10) { //  No need for explicit null checks, instanceof always returns false for null values
+            System.out.println("Number is greater than 10");
+        }
+      ```
+
+6) Java 11
    - New methods to String class : isBlank, lines, strip, stripLeading, stripTrailing, and repeat.
      ```
      String multilineString = "Baeldung helps \n \n developers \n explore Java.";

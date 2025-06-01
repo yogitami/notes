@@ -253,3 +253,51 @@ public class EmployeeDepartmentExample {
             .filter(m -> m.getValue > 1).map( m -> m.getKey())
             .collect(Collectors.toSet()) ;
     ```
+21. Customers whose lifetime spending exceeds a certain threshold.
+    ```
+    Map<Boolean,List<Customer>> result = customerList.stream().collect(Collectors.partitioningBy(customer -> customers.getTotalSpend() > 10000));
+    ```
+22. Counting the total number of orders placed by customers over a given period of time.
+    ```
+    long totalOrders = orderList.stream().collect(Collectors.counting()); // useful for generating daily,weekly or monthly sales report.
+    ```
+23. summazingInt
+    ```
+    IntSummaryStatics stats = numbers.stream().collect(Collectors.toSummarizingInt(Integer::intValue)); //getMin,getMax,etc.
+    ```
+24. Extract cutomer email address from list of orders, to create a list of email addresses for sending marketing or order status update.
+    ```
+    List<String> customerEmails = orderList.stream().collect(Collectors.mapping(order -> order.getCustomer.getEmail(), Collectors.toList()));
+    ```
+25. Group a list of string by length and count the number of strings in each group.
+    ```
+    Map<Integer,Long> result = stringList.stream().collect(Collectors.groupingBy(String::length, Collectors.counting));
+    ```
+26. Group orders by customer and then count how many orders each customer placed
+    ```
+    orderList.stream().collect(Collectors.groupingBy(Order::getCustomer, Collectors.counting()));
+    ```
+27. Collect customers in a set but then transform the set into the list of customer email addresses.
+    ```
+    customerList.stream().collect(Collectors.collectingAndThen(Collectors.toSet(), set -> set.stream().map(Customer::getEmail).toList));
+    ```
+28. collect the length of all strings in the list and sum them.
+    ```
+    words.stream().collect(Collectors.mapping(String::length,Collectors.summingInt(Integer::intValue)));
+    ```
+29. Collect all unique product names from a list of orders.
+    ```
+    orderList.stream().flatMap(order -> order.getProduct().stream()).collect(Collectors.mapping(Product::getName, Collectors.toSet()));
+    ```
+30. Create a map where each order id is associated with its total amount.
+    ```
+    orderList.stream().collect(Collectors.toMap(Order::getId, Order::getTotalAmount));
+    ```
+31. Find the sum of a list of integers.
+    ```
+    numbers.stream().collect(Collectors.reducing(0, Integer::sum));
+    ```
+32. Sum the total revenue from the list of orders
+    ```
+    orderList.stream().map(Order::getTotalAmount).collect(Collectors.reducing(0, Integer::sum));
+    ```

@@ -228,6 +228,29 @@
        System.out.println(welcomeText);
      ```
    - unnamed patterns and variables : improves experience of deconstructing records, particularly those with many components.
+   - **The ‘when’ clause is added in Java 21 which allows us to include conditional statement in a case label. This is called a guarded pattern label.**
+     ```
+     public String testType(Object obj) {  
+            return switch (obj) { 
+                case null -> "NULL value"; 
+                case String str -> "It's a String";  
+                case Size s -> "Enum Type"; 
+                case Point p -> "Records Type"; 
+                case Employee e -> "Custom Object's Type"; 
+                case int[] ai -> "Array Type"; 
+                case Employee e when e.getName().equals("John") -> "Conditional Statement";  
+                default -> "Unknown"; 
+             }; 
+        } 
+        
+        public enum Size {  
+           SMALL, MEDIUM, LARGE; 
+        } 
+        
+        public record Point(int i, int j) { ..... } 
+        
+        public class Employee{ ..... }
+     ```
 
 5) Java 17
    - Sealed Classes (Finalized) — Restrict class inheritance.

@@ -301,3 +301,31 @@ public class EmployeeDepartmentExample {
     ```
     orderList.stream().map(Order::getTotalAmount).collect(Collectors.reducing(0, Integer::sum));
     ```
+33. Given List<Order> , Order has List<Product> , Product has category.
+    - Generate a report the shows for each product category the total number of quantities sold in 24 hours but
+      - only include orders where total values is more than 500$
+      - product are not out of stock
+      - he report must be sorted by total quantity in descending order.
+        ```
+        Map<String,Integer> result = orderList.stream().filter(order -> order.getOrderTime.isAfter(LocalDateTime.now().minusHours(24)))
+                                        .filter(order -> order.getTotalValue > 500)
+                                        .flatMap(order -> order.getProducts.stream())
+                                        .filter(product -> product.isInStock())
+                                        .collect(Collectors.groupingBy(Product.getCategory, Collectors.summingInt(Product::getQuantity)))
+                                                .entrySet().stream().
+                                                .sorted(Map.Entry.<String,Integer>comparingByValue(Comparator.reverseOrder()))
+                                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new));
+        ```
+34. Your warehouse system tracks inventory level of products. During order processing, you need to flag orders where the ordered quantity exceeds the available stock.
+    - You have
+    - Map<String,Integer> productStock : productId -> available stock
+    - List of order objects where each order has a list of product and each product has a product id and quantity
+    - Identify which orders have issue with the stock availability
+            ```
+              List<String> problematicOrder = orderList.stream().flatMap(order -> order.getProducts.stream())
+                                                      .anyMatch(product -> {
+                                                              int availableStock = productStock.get(product.getId);
+                                                              return availableStock < product.getQuantity();
+                                                              }). map(Order::getId).toList();
+      
+            ```

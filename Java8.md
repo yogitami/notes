@@ -323,11 +323,11 @@ public class EmployeeDepartmentExample {
     - Map<String,Integer> productStock : productId -> available stock
     - List of order objects where each order has a list of product and each product has a product id and quantity
     - Identify which orders have issue with the stock availability
-            ```
-              List<String> problematicOrder = orderList.stream().flatMap(order -> order.getProducts.stream())
-                                                      .anyMatch(product -> {
-                                                              int availableStock = productStock.get(product.getId);
-                                                              return availableStock < product.getQuantity();
-                                                              }). map(Order::getId).toList();
+      ```
+      List<String> problematicOrder = orderList.stream().flatMap(order -> order.getProducts.stream())
+              .anyMatch(product -> {
+              int availableStock = productStock.get(product.getId);
+              return availableStock < product.getQuantity();
+              }). map(Order::getId).toList();
       
-            ```
+      ```

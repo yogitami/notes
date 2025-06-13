@@ -29,3 +29,7 @@
 3. IP address is returned to the browser or mobile app.
 4. Once IP address is obtained, HTTP requests are sent directly to your web server
 5. The web server returns HTML pages or Json response for rendering.
+6. |   Growth  |
+| --- |
+| <img width="100%" src="ImagesForDocs/Untitled Diagram.drawio.png"> |
+|  |

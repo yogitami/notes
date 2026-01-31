@@ -1,15 +1,15 @@
 
 # Kubernetes
 
-- Kubernetes is open source container orchestration platform (manages containers)
+- Kubernetes is open source container orchestration platform (manages containers).
 - It automates the deployment,scaling & management of containized applications.
-- Helps you managed containerized applications (manage applications that are made up of many containers) in different environments
+- Helps you manage containerized applications (manage applications that are made up of many containers) in different environments
 - K8s doesn't manage data persistence (we are responsible for backing up the data/replicating/managing it) -- here we talking about the application data
-
 - A system deployed on k8s is known as cluster.
 
+### Cluster
 1. A Kubernetes cluster is a set of machines, called nodes, that are used to run containized applications.
-2. 2 main pieces in k8s cluster :
+2. Two main pieces in k8s cluster :
 	1. Control Plane : Responsible for managing the state of the cluster. In prod env, the control plane usually runs on multiple nodes that span accross several data center zones.
 	1. Set of worker nodes : Run the containized applications workloads. Containized applications run in a POD. Pod hosts one or more containers & provide shared storage (db) and networking for those containers.
 3. Pods are created and managed by k8s control plane.
@@ -20,10 +20,9 @@
 	1. Container runtime : runs containers on the worker nodes. It is responsible for pulling the container image from a registry & starting/stopping/managing the container's resources.
 	1. Kube-proxy : provides load balancing and routes traffic to correct pods.
 
-|   Kubernetes Internal working  |
+|  Internal working of Kubernetes cluster  |
 | --- |
-| <img width="100%" src="ImagesForDocs/Kubernetes_Flow.png"> |
-|  |
+| <img width="50%" src="ImagesForDocs/Kubernetes_Flow.png">  |
 
 *What generally happens*
 - In a microservice architecture, we containerize each application for easy scaling or management of those services. And we need a tool/framework to manage those containers together that is where Kubernetes comes in place.
@@ -40,13 +39,12 @@
 
 - Managed k9s services are provided by cloud providers : EKS, GKE, AKS
 
-*Kubernetes Components*
+### Kubernetes Components
 
 |  Kubernetes Components   |
 | --- |
-| <img width="100%" src="ImagesForDocs/K8_Components_1.png"> |
-|  |
-| <img width="100%" src="ImagesForDocs/K8_Components_2.png"> |
+| <img width="50%" src="ImagesForDocs/k8_Components_1.png"> |
+| <img width="50%" src="ImagesForDocs/K8_Components_2.png"> |
 
 1. Node & Pod
 : 
@@ -88,16 +86,7 @@
 	- Db's can be replicated using deployments.
 	- Stateful is for databases or stateful apps.
 
-#### Architecture
-: 
-	1. Master and slave nodes.
-	1. Worker nodes do the actual work.
-	1. Woker machine in k8s cluster : container runtime, kubelet(interacts with both container runtime and node).
-	1. Kubelet starts the pod with a conatiner inside.
-	1. Kube proxy forwards the requests (forwarding requests from services to pods)
-
-
-## KubeCtl
+### KubeCtl Commands
 
 - We work with deployments and not the actual pods.
 1. Kubectl -h (help)
@@ -116,7 +105,7 @@
 
 - We create deployment with some image using kubctl create deployment ... (command)
 
-## Namespace
+### Namespace
 Virtual cluster inside a cluster.
 
 
@@ -126,18 +115,20 @@ BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD
 
 |  Kubernetes  |
 | --- |
-| <img width="100%" src="ImagesForDocs/k8.png"> |
+| <img width="50%" src="ImagesForDocs/k8.png"> |
 |  |
 
-## K9s
+### Architecture
 
-
-## Docker
-
+	1. Master and slave nodes.
+	2. Worker nodes do the actual work.
+	3. Woker machine in k8s cluster : container runtime, kubelet(interacts with both container runtime and node).
+	4. Kubelet starts the pod with a conatiner inside.
+	5. Kube proxy forwards the requests (forwarding requests from services to pods)
 
 ## Helm
 
-| <img width="100%" src="ImagesForDocs/helm.png"> |
+| <img width="50%" src="ImagesForDocs/helm.png"> |
 |  |
 | Let's say we have deployed our app in k8 cluster and now we want to do logging. Without helm, each person who wants to do logging will have to configure all the yaml files relating to it. Helm provides a easy way to achieve this where just one person can do the work of configuring yaml files and package them and make it available somewhere so that others can just use it. That bundle of yaml files is called as "helm chart"|
 

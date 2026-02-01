@@ -18,7 +18,7 @@
 - [⎈ Helm Charts](#-helm-charts)
 - [🔑 RBAC](#-rbac-role-based-access-control)
 - [🛡️ Pod Disruption Budgets](#%EF%B8%8F-pod-disruption-budgets-pdb)
-- [🏗️ How It All Works Together](#-how-it-all-works-together)
+- [🏗️ How It All Works Together](#%EF%B8%8F-how-it-all-works-together)
 - [🌍 Real-World Analogy](#-real-world-analogy)
 - [🔄 Context](#-context)
 - [🧪 kubectl Commands](#-kubectl-commands)

@@ -20,7 +20,7 @@
 - [🛡️ Pod Disruption Budgets](#%EF%B8%8F-pod-disruption-budgets-pdb)
 - [🏗️ How It All Works Together](#%EF%B8%8F-how-it-all-works-together)
 - [🌍 Real-World Analogy](#-real-world-analogy)
-- [🔄 Context](#-context)
+- [🔄 Context](#context)
 - [🧪 kubectl Commands](#-kubectl-commands)
 - [🔄 Request Flow](#-request-flow)
 - [🏗️ Architecture](#-architecture)

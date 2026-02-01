@@ -40,7 +40,7 @@ Components:
 
 | Kubernetes Cluster Flow |
 |-------------------------|
-| <img width="60%" src="ImagesForDocs/Kubernetes_Flow.png"> |
+| <p align="center"> <img width="60%" src="ImagesForDocs/Kubernetes_Flow.png"> </p> |
 
 ---
 
@@ -164,8 +164,9 @@ A virtual cluster inside a Kubernetes cluster.
 
     Browser → Ingress → Service → Pod
 
-Image:
-![Kubernetes architecture](ImagesForDocs/k8.png)
+<p align="center">
+  <img src="ImagesForDocs/k8.png" alt="Kubernetes request flow" width="450">
+</p>
 
 
 ---
@@ -186,7 +187,7 @@ Image:
 
 | Helm |
 |------|
-| <img width="50%" src="ImagesForDocs/helm.png"> |
+| <p align="center"><img width="50%" src="ImagesForDocs/helm.png"> </p>|
 
 Helm simplifies Kubernetes application deployment.
 

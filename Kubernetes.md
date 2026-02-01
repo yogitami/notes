@@ -17,7 +17,7 @@
 - [📦 Deployment & StatefulSet](#-deployment--statefulset)
 - [⎈ Helm Charts](#-helm-charts)
 - [🔑 RBAC](#-rbac-role-based-access-control)
-- [🛡️ Pod Disruption Budgets](#-pod-disruption-budgets-pdb)
+- [🛡️ Pod Disruption Budgets](#%EF%B8%8F-pod-disruption-budgets-pdb)
 - [🏗️ How It All Works Together](#-how-it-all-works-together)
 - [🌍 Real-World Analogy](#-real-world-analogy)
 - [🔄 Context](#-context)

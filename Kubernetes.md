@@ -14,7 +14,7 @@ A Kubernetes cluster is a set of machines (**nodes**) used to run containerized 
 
 ### Cluster has two main parts:
 
-#### 🧠 Control Plane
+#### 🧠 Control Plane Nodes (Master Nodes)
 Responsible for managing the state of the cluster.  
 In production, it usually runs on multiple nodes across different zones.
 
@@ -75,19 +75,51 @@ Kubernetes manages and orchestrates these containers together.
 
 ---
 
+## 📁 Namespace
+
+- A Namespace is like a virtual folder or workspace inside your Kubernetes cluster that keeps resources organized and separated.
+- Keeps different parts of your application separated and organized.
+- Kubernetes uses namespaces to organize objects in the cluster.
+- If you delete a namespace, pods in that namespace are also deleted.
+- PODS run on nodes in namespaces.
+- One node hosts pods from multiple namespaces
+- When we create pods they are linked to a namespace & Kubernetes distribute them across available nodes.
+- Secrets in default namespace aren't accessible from backoffice namespace (by default)
+- A service named bootstrap in kafka namespace is different from bootstrap in default namespace.
+
+```
+namespace = "default"      # For onboarding apps
+namespace = "backoffice"   # For backoffice apps
+namespace = "kafka"        # For Kafka services
+```
+
+```
+kubectl get namespaces
+kubectl get pods -n backoffice
+kubectl get pods --all-namespaces
+kubectl config set-context --current --namespace=default
+# Scale onboarding-web in "default" namespace
+kubectl scale deployment onboarding-web -n default --replicas=5
+```
+
+---
+
 ## 🧱 Node & Pod
 
-- Node = physical or virtual machine.
+- Node = physical or virtual machine where Kubernetes runs your applications.
 - Pods run inside nodes.
-- Pod is an abstraction over containers.
+- Pod is an abstraction over containers. A wrapper around one or more containers running your application
 - Usually one application per pod.
 - Each pod has its own IP address.
-- Example: App and database run in separate pods.
+- **Example**:
+  * Each Java application (from the onboarding repo) runs in pods
+  * App and database run in separate pods.
 
 ---
 
 ## 🌍 Service & Ingress
 
+- A stable "address" that lets other apps find and talk to your pods
 - Pods communicate using **Services**.
 - Services have static IP and DNS.
 - Services provide load balancing.
@@ -102,10 +134,16 @@ Kubernetes manages and orchestrates these containers together.
 ---
 
 ## 🔐 ConfigMap & Secret (External Configuration)
+ConfigMaps and Secrets must be connected to Pods.
 
-- **ConfigMap** stores non-sensitive configuration (e.g., DB URL).
-- **Secret** stores sensitive data (base64 encoded).
-- ConfigMaps and Secrets must be connected to Pods.
+### ConfigMap
+- Stores non-sensitive configuration (e.g., DB URL).
+- Change settings without rebuilding your application
+  
+### Secret
+- Secure storage for sensitive data (passwords, certificates, API keys) (base64 encoded).
+- Extensively used for Kafka credentials, certificates, encryption keys.
+- Keeps sensitive data out of your application code
 
 ---
 
@@ -125,10 +163,86 @@ Data persists even if the pod restarts.
 
 ### Deployment
 - Blueprint for pods
-- Manages replicas and scaling
+- Tells Kubernetes how many copies (replicas) of your app to run and how to update them.
+- Managed through Helm charts
 
 ### StatefulSet
 - Used for databases and stateful applications
+
+---
+
+## ⎈ Helm Charts
+- Like a "package manager" for Kubernetes - pre-configured templates for deploying applications.
+
+```
+  resource "helm_release" "app" {
+  name       = "onboarding-applicants"
+  repository = "https://buxcharts.devops.getbux.com"
+  chart      = "onboarding-applicants"
+  version    = var.chart_version
+  namespace  = "default"
+  values     = [
+    file("global-apps.yaml"),     # Common settings
+    file("onboarding-applicants.yaml")  # App-specific settings
+  ]
+}
+```
+
+---
+
+## 🔑 RBAC (Role-Based Access Control)
+- Roles allow specific service accounts to read/write ConfigMaps
+
+---
+
+## 🛡️ Pod Disruption Budgets (PDB)
+- Ensures at least some pods stay running during cluster maintenance
+---
+## 🏗️ How It All Works Together
+
+```
+1. Terraform creates the Kubernetes resources
+2. Helm deploys your Java applications as Deployments
+3. Deployments create Pods (multiple copies for reliability)
+4. Services give stable addresses to reach the Pods
+5. Secrets inject passwords/certificates into Pods
+6. Ingress routes external traffic from the internet to your Services
+7. Namespaces keep everything organized
+```
+
+---
+
+## 🌍 Real-World Analogy
+
+Think of Kubernetes like a **shipping warehouse**.
+
+| Concept   | Warehouse Analogy              | Kubernetes Meaning                     |
+|----------|--------------------------------|----------------------------------------|
+| Cluster  | Entire warehouse facility      | The complete Kubernetes system         |
+| Node     | Individual shelving units      | Physical or virtual machines           |
+| Pod      | Storage boxes on shelves       | Wrapper around one or more containers  |
+| Container| Items inside the boxes         | Your application                       |
+| Kubelet  | Shelf manager                  | Ensures Pods are running correctly     |
+| Service  | Aisle numbers                  | Stable address to access Pods          |
+
+
+---
+
+## Context
+- A context in Kubernetes is like a saved connection profile that tells kubectl Which cluster to connect to (production, development, local?), Which user/credentials to use (your identity), Which namespace to use by default (default, backoffice, kafka?)
+- All your contexts are saved in a file called kubeconfig
+
+```
+kubectl config get-contexts
+kubectl config use-context dev-kafka
+kubectl config current-context
+kubectl config view
+kubectl config set-context --current --namespace=backoffice (change default namespace for current context)
+kubectl config set-context my-new-context \
+  --cluster=production \
+  --user=mittaly-prod \
+  --namespace=backoffice
+```
 
 ---
 
@@ -151,12 +265,7 @@ Data persists even if the pod restarts.
 | `kubectl get pods -o wide` | Detailed pod list |
 | `kubectl get all` | Show all resources |
 | `kubectl get configmap -o yaml` | View ConfigMap |
-
----
-
-## 📁 Namespace
-
-A virtual cluster inside a Kubernetes cluster.
+| `kubectl get pods -o wide --all-namespaces` | See Which Pods are WHERE and WHAT |
 
 ---
 

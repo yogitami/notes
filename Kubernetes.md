@@ -1,176 +1,276 @@
+# 🚢 Kubernetes
 
-# Kubernetes
+- Kubernetes is an open-source container orchestration platform (manages containers).
+- It automates deployment, scaling, and management of containerized applications.
+- Helps manage applications composed of multiple containers across different environments.
+- Kubernetes does **not** manage application data persistence — backups and replication are our responsibility.
+- A system deployed on Kubernetes is called a **cluster**.
 
-- Kubernetes is open source container orchestration platform (manages containers).
-- It automates the deployment,scaling & management of containized applications.
-- Helps you manage containerized applications (manage applications that are made up of many containers) in different environments
-- K8s doesn't manage data persistence (we are responsible for backing up the data/replicating/managing it) -- here we talking about the application data
-- A system deployed on k8s is known as cluster.
+---
 
-### Cluster
-1. A Kubernetes cluster is a set of machines, called nodes, that are used to run containized applications.
-2. Two main pieces in k8s cluster :
-	1. Control Plane : Responsible for managing the state of the cluster. In prod env, the control plane usually runs on multiple nodes that span accross several data center zones.
-	1. Set of worker nodes : Run the containized applications workloads. Containized applications run in a POD. Pod hosts one or more containers & provide shared storage (db) and networking for those containers.
-3. Pods are created and managed by k8s control plane.
-4. Control plane : consists of 4 components : API server, etcd, scheduler and controller manager.
-5. Clients submit the request to control plane to manage cluster using rest APIs.
-6. Worker nodes :
-	1. Kubelet
-	1. Container runtime : runs containers on the worker nodes. It is responsible for pulling the container image from a registry & starting/stopping/managing the container's resources.
-	1. Kube-proxy : provides load balancing and routes traffic to correct pods.
+## 🌐 Cluster
 
-|  Internal working of Kubernetes cluster  |
-| --- |
-| <img width="50%" src="ImagesForDocs/Kubernetes_Flow.png">  |
+A Kubernetes cluster is a set of machines (**nodes**) used to run containerized applications.
 
-*What generally happens*
-- In a microservice architecture, we containerize each application for easy scaling or management of those services. And we need a tool/framework to manage those containers together that is where Kubernetes comes in place.
+### Cluster has two main parts:
 
-*What problems Kubernetes solve*
+#### 🧠 Control Plane
+Responsible for managing the state of the cluster.  
+In production, it usually runs on multiple nodes across different zones.
 
-1. High Availability or no downtime (application has no downtime)
-1. Scalability or high performance
-1. Disaster Recovery
-1. self healing, automatic rollbacks, horizontal scaling.
-1. Makes it easy to scale our application up and down as needed.
-1. It is portable. It runs on on-premise, public cloud or in a hybrid env. Provides a uniform way to package,deploy and manage applications.
+Components:
+- API Server  
+- etcd  
+- Scheduler  
+- Controller Manager  
 
+Clients communicate with the Control Plane using REST APIs.
 
-- Managed k9s services are provided by cloud providers : EKS, GKE, AKS
+#### ⚙️ Worker Nodes
+Run containerized application workloads inside **Pods**.
 
-### Kubernetes Components
+Components:
+- **Kubelet** – communicates with Control Plane and container runtime.
+- **Container Runtime** – pulls images and runs containers.
+- **Kube-proxy** – routes traffic and provides load balancing.
 
-|  Kubernetes Components   |
-| --- |
-| <img width="50%" src="ImagesForDocs/k8_Components_1.png"> |
-| <img width="50%" src="ImagesForDocs/K8_Components_2.png"> |
+---
 
-1. Node & Pod
-: 
-	- Node is physcial/virtual server. Pod's are inside this server.
-	-  Pod is an abstraction over container.
-	- usually 1 application per Pod.
-	- Each Pod gets its own IP address
-	-  Ex : an application which has a db connection. In this case 2 have 2 pods.
-	- Pod : abstraction of containers
+### 🔁 Internal Working of Kubernetes Cluster
 
-1. Service & Ingress
-: 
-	- Pod's communicate with each other using a service.
-	- Service has permanenet/static IP address with a DNS name.
-	- Service can also act as a load balancer.
-	- can be attached to each Pod.
-	- lifecycle of Pod and services are not connected.
-	- External service and Internal service
-	- **Ingress routes traffic into the cluster.**
-	- Ingress does the forwarding to services.
-	- Service : communication between different pods and between different nodes.
+| Kubernetes Cluster Flow |
+|-------------------------|
+| <img width="60%" src="ImagesForDocs/Kubernetes_Flow.png"> |
 
-1. ConfigMap & Secret
-: **External configuration**
-	- ConfigMap is used for setting external configuration of your application. For ex : db url, etc. So that in future if the URL changes, we just change the config map and the main service doesn't get affected (we don't need to redeploy it).
-	- Secret is just like config map but it used to store secret data (base64 encoded).
-	- You need to connect config map/ secret to your Pod.
+---
 
-1. Volumes
-: **Data Persistence**
-	- we have a pod which has a database and we want it to be persisted even when it restarts, here volumes comes to rescue.
-	- we can attach volumes to the database pod and store them either locally or remotely (outside the k8s cluster) (cloud storage, etc)
+## 💡 Why Kubernetes?
 
-1. StatefulSet & Deployment
-: 
-	- Deployments : blueprint for my-app pods / replicas
-	- Deployment takes care of replicas and scaling.
-	- Deployments are abstraction of pods.
-	- Db's can be replicated using deployments.
-	- Stateful is for databases or stateful apps.
+In **microservices architecture**, each service is containerized for easier scaling and management.  
+Kubernetes manages and orchestrates these containers together.
 
-### KubeCtl Commands
+---
 
-- We work with deployments and not the actual pods.
-1. Kubectl -h (help)
-1. kubectl get pod/deployment/nodes/services
-1. kubectl logs pod_name (debug)
-1. kubectl describe pod pod_name (get info about pod - debug)
-1. kubectl exec -it pod_name -- bin/bash
-1. kubectl config get-contexts
-1. kubectl config current-context
-1. kubectl apply -f config.yaml (for chaning and applying configuration to deployment)
-1. kubctl describe service service_name (validate the right pods) -- run for a service
-1. kubectl get pod -o wide
-1. kubectl get all
-1. kubectl get configmap -o yaml
-1.
+## ⚠️ Problems Kubernetes Solves
 
-- We create deployment with some image using kubctl create deployment ... (command)
+1. High availability (no downtime)
+2. Scalability and performance
+3. Disaster recovery
+4. Self-healing and automatic rollbacks
+5. Horizontal scaling
+6. Portability (on-prem, cloud, or hybrid)
 
-### Namespace
-Virtual cluster inside a cluster.
+### Managed Kubernetes Services
+- **EKS** (AWS)
+- **GKE** (Google)
+- **AKS** (Azure)
 
+---
 
-FLOW : 
+## ⚙️ Kubernetes Components
+
+| Component Diagram | Component Diagram |
+|------------------|------------------|
+| <img width="100%" src="ImagesForDocs/k8_Components_1.png"> | <img width="100%" src="ImagesForDocs/K8_Components_2.png"> |
+
+---
+
+## 🧱 Node & Pod
+
+- Node = physical or virtual machine.
+- Pods run inside nodes.
+- Pod is an abstraction over containers.
+- Usually one application per pod.
+- Each pod has its own IP address.
+- Example: App and database run in separate pods.
+
+---
+
+## 🌍 Service & Ingress
+
+- Pods communicate using **Services**.
+- Services have static IP and DNS.
+- Services provide load balancing.
+- Pod and Service lifecycles are independent.
+
+### Types of Services:
+- Internal Service
+- External Service
+
+**Ingress** routes traffic into the cluster and forwards it to services.
+
+---
+
+## 🔐 ConfigMap & Secret (External Configuration)
+
+- **ConfigMap** stores non-sensitive configuration (e.g., DB URL).
+- **Secret** stores sensitive data (base64 encoded).
+- ConfigMaps and Secrets must be connected to Pods.
+
+---
+
+## 💾 Volumes (Data Persistence)
+
+Used when pods need persistent data (e.g., databases).
+
+Types:
+- Local volumes  
+- Remote volumes (cloud storage)
+
+Data persists even if the pod restarts.
+
+---
+
+## 📦 Deployment & StatefulSet
+
+### Deployment
+- Blueprint for pods
+- Manages replicas and scaling
+
+### StatefulSet
+- Used for databases and stateful applications
+
+---
+
+## 🧪 kubectl Commands
+
+| Command | Description |
+|--------|-------------|
+| `kubectl -h` | Show help |
+| `kubectl get pods` | List pods |
+| `kubectl get deployments` | List deployments |
+| `kubectl get nodes` | List nodes |
+| `kubectl get services` | List services |
+| `kubectl logs pod_name` | View pod logs |
+| `kubectl describe pod pod_name` | Detailed pod info |
+| `kubectl exec -it pod_name -- /bin/bash` | Access pod shell |
+| `kubectl config get-contexts` | List contexts |
+| `kubectl config current-context` | Show active context |
+| `kubectl apply -f config.yaml` | Apply configuration |
+| `kubectl describe service service_name` | Debug service |
+| `kubectl get pods -o wide` | Detailed pod list |
+| `kubectl get all` | Show all resources |
+| `kubectl get configmap -o yaml` | View ConfigMap |
+
+---
+
+## 📁 Namespace
+
+A virtual cluster inside a Kubernetes cluster.
+
+---
+
+## 🔄 Request Flow
 
 BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD 
 
-|  Kubernetes  |
-| --- |
+
+| Kubernetes |
+|------------|
 | <img width="50%" src="ImagesForDocs/k8.png"> |
-|  |
 
-### Architecture
+---
 
-	1. Master and slave nodes.
-	2. Worker nodes do the actual work.
-	3. Woker machine in k8s cluster : container runtime, kubelet(interacts with both container runtime and node).
-	4. Kubelet starts the pod with a conatiner inside.
-	5. Kube proxy forwards the requests (forwarding requests from services to pods)
+## 🏗️ Architecture
 
-## Helm
+1. Master and worker nodes.
+2. Worker nodes do the actual work.
+3. Worker node contains:
+   - Container runtime  
+   - Kubelet  
+4. Kubelet starts the pod with a container inside.
+5. Kube-proxy forwards requests from services to pods.
 
+---
+
+## ⎈ Helm
+
+| Helm |
+|------|
 | <img width="50%" src="ImagesForDocs/helm.png"> |
-|  |
-| Let's say we have deployed our app in k8 cluster and now we want to do logging. Without helm, each person who wants to do logging will have to configure all the yaml files relating to it. Helm provides a easy way to achieve this where just one person can do the work of configuring yaml files and package them and make it available somewhere so that others can just use it. That bundle of yaml files is called as "helm chart"|
 
-1. Package manager for k8s.
-1. Way to package yaml files and distribute them in public and private repos.
-1. Using helm, we can create our own helm charts & push them to helm repo. 
-1. We can also download the charts created by others and use them.
-1. Other use case of helm is :
-	Imagine we have an app that is made up of multiple microservices & we are deploying all of them in our k8 cluster. Deployment and service of each of those microservice just different by app name and version or docker image number and version tag. Without helm, we would have to write separate config files for all of them. To avoid this we can use helm to define a common blueprint for all the microservices & the values that are going to change replaced by placeholder. This would be called as a template file where at some places instead of values we would have syntax, which would mean we are taking value from external configuration.
-	And that external config comes from an additional yaml file. The easy way for this is to replace these values in our build pipelines.
-1. We can also use helm to reploy accrodd diff env's by making our own helm chart and deploying them across different env's.
+Helm simplifies Kubernetes application deployment.
+
+Without Helm:
+- Each user must configure all YAML files manually.
+
+With Helm:
+- One person creates and packages YAML files into a **Helm chart**.
+- Others can reuse the chart easily.
+
+### Features:
+1. Package manager for Kubernetes.
+2. Packages YAML files into charts.
+3. Charts can be stored in public or private repositories.
+4. You can:
+   - Create your own charts.
+   - Download and use existing charts.
+
+### Use Case:
+For microservices:
+- Deployment and service YAMLs differ only in app name and version.
+- Helm allows creating a common template.
+- Dynamic values are replaced using external configuration files.
+- Easy deployment across multiple environments (dev, test, prod).
+
+---
+
+## ☁️ GCP / GKE
+
+Commands:
+```bash
+kubectl config current-context
+helm -n backoffice ls
 
 
 
 
-## GCP/GKE
 
+🧰 Tech Stack (onboarding-infra)
+Kubernetes (K8s)
 
-1. kubectl config current-context
+Used for container orchestration and managing microservices deployment.
 
-1. helm -n backoffice ls 
+Helm
 
+Packages and deploys Kubernetes applications.
 
+Used to deploy services like:
 
+onboarding-cs
 
-## Tech Stack used in onboarding-infra
+broker-accounts-command
 
-1. K8s : Used for container orchestration and managing the deployment of microservices.
-1. Helm
-: 
-	- Helm charts are used to package and deploy Kubernetes applications.
-	- The repository includes Helm commands (runHelm upgrade) to deploy services like onboarding-cs, broker-accounts-command, etc.
-1. Terraform
-: 
-	- Used for provisioning Kubernetes resources and managing infrastructure components.
-	- ßExample: terraform/kubernetes/modules/broker-accounts-command/main.tf provisions Helm releases and secrets.
-1. Google Cloud Platform (GCP)
-: 
-	- GKE (Google Kubernetes Engine) is used for running Kubernetes clusters.
-	- GCP services like Cloud SQL, IAM, and networking are configured using gcloud commands.
-1. SOPS (Secrets OPerationS) : Used for managing and encrypting sensitive data (e.g., secrets for Kubernetes).
-1. Bash Scripts : Scripts like create.sh and create-test.sh automate cluster creation, resource provisioning, and service deployment.
+Terraform
+
+Provisions Kubernetes resources.
+
+Manages infrastructure components.
+
+Example:
+
+terraform/kubernetes/modules/broker-accounts-command/main.tf
+provisions Helm releases and secrets.
+
+Google Cloud Platform (GCP)
+
+GKE for Kubernetes clusters.
+
+Cloud SQL, IAM, and networking via gcloud.
+
+SOPS (Secrets OPerationS)
+
+Encrypts and manages sensitive Kubernetes secrets.
+
+Bash Scripts
+
+Scripts like create.sh and create-test.sh automate:
+
+Cluster creation
+
+Resource provisioning
+
+Service deployment
 
 
 

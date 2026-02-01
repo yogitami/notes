@@ -162,24 +162,23 @@ A virtual cluster inside a Kubernetes cluster.
 
 ## 🔄 Request Flow
 
-BROWSER -> INGRESS -> SERVICE (INTERNAL) -> POD 
+    Browser → Ingress → Service → Pod
 
+Image:
+![Kubernetes architecture](ImagesForDocs/k8.png)
 
-| Kubernetes |
-|------------|
-| <img width="50%" src="ImagesForDocs/k8.png"> |
 
 ---
 
 ## 🏗️ Architecture
 
-1. Master and worker nodes.
-2. Worker nodes do the actual work.
+1. Cluster consists of Control Plane and Worker nodes
+2. Worker nodes do the actual work
 3. Worker node contains:
-   - Container runtime  
-   - Kubelet  
-4. Kubelet starts the pod with a container inside.
-5. Kube-proxy forwards requests from services to pods.
+   - Container runtime
+   - Kubelet
+4. Kubelet starts Pods
+5. Kube-proxy forwards requests from Services to Pods
 
 ---
 
@@ -218,59 +217,57 @@ For microservices:
 ## ☁️ GCP / GKE
 
 Commands:
-```bash
-kubectl config current-context
-helm -n backoffice ls
 
+    kubectl config current-context
+    helm -n backoffice ls
 
+---
 
+## 🧰 Tech Stack (onboarding-infra)
 
-
-🧰 Tech Stack (onboarding-infra)
-Kubernetes (K8s)
+### Kubernetes (K8s)
 
 Used for container orchestration and managing microservices deployment.
 
-Helm
+### Helm
 
 Packages and deploys Kubernetes applications.
 
 Used to deploy services like:
 
-onboarding-cs
+    onboarding-cs
+    broker-accounts-command
 
-broker-accounts-command
+### Terraform
 
-Terraform
-
-Provisions Kubernetes resources.
-
-Manages infrastructure components.
+Provisions Kubernetes resources and manages infrastructure components.
 
 Example:
 
-terraform/kubernetes/modules/broker-accounts-command/main.tf
-provisions Helm releases and secrets.
+    terraform/kubernetes/modules/broker-accounts-command/main.tf
 
-Google Cloud Platform (GCP)
+### Google Cloud Platform (GCP)
 
-GKE for Kubernetes clusters.
+- GKE for Kubernetes clusters
+- Cloud SQL
+- IAM and networking via gcloud
 
-Cloud SQL, IAM, and networking via gcloud.
-
-SOPS (Secrets OPerationS)
+### SOPS
 
 Encrypts and manages sensitive Kubernetes secrets.
 
-Bash Scripts
+### Bash Scripts
 
-Scripts like create.sh and create-test.sh automate:
+Scripts such as:
 
-Cluster creation
+    create.sh
+    create-test.sh
 
-Resource provisioning
+Used for:
+- Cluster creation
+- Resource provisioning
+- Service deployment
 
-Service deployment
 
 
 

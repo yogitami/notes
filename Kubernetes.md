@@ -6,6 +6,27 @@
 - Kubernetes does **not** manage application data persistence — backups and replication are our responsibility.
 - A system deployed on Kubernetes is called a **cluster**.
 
+ ## 📌 Quick Navigation
+- [🌐 Cluster](#-cluster)
+- [⚙️ Kubernetes Components](#-kubernetes-components)
+- [📁 Namespace](#-namespace)
+- [🧱 Node & Pod](#-node--pod)
+- [🌍 Service & Ingress](#-service--ingress)
+- [🔐 ConfigMap & Secret](#-configmap--secret-external-configuration)
+- [💾 Volumes](#-volumes-data-persistence)
+- [📦 Deployment & StatefulSet](#-deployment--statefulset)
+- [⎈ Helm Charts](#-helm-charts)
+- [🔑 RBAC](#-rbac-role-based-access-control)
+- [🛡️ Pod Disruption Budgets](#-pod-disruption-budgets-pdb)
+- [🏗️ How It All Works Together](#-how-it-all-works-together)
+- [🌍 Real-World Analogy](#-real-world-analogy)
+- [🔄 Context](#-context)
+- [🧪 kubectl Commands](#-kubectl-commands)
+- [🔄 Request Flow](#-request-flow)
+- [🏗️ Architecture](#-architecture)
+- [☁️ GCP / GKE](#-gcp--gke)
+- [🧰 Tech Stack (onboarding-infra)](#-tech-stack-onboarding-infra)
+
 ---
 
 ## 🌐 Cluster

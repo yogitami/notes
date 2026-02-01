@@ -8,7 +8,7 @@
 
  ## 📌 Quick Navigation
 - [🌐 Cluster](#-cluster)
-- [⚙️ Kubernetes Components](#-kubernetes-components)
+- [⚙️ Kubernetes Components](#%EF%B8%8F-kubernetes-components)
 - [📁 Namespace](#-namespace)
 - [🧱 Node & Pod](#-node--pod)
 - [🌍 Service & Ingress](#-service--ingress)

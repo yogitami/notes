@@ -211,6 +211,7 @@ Data persists even if the pod restarts.
   # Or rollback to a specific revision
   kubectl rollout history deployment/onboarding-web
   kubectl rollout undo deployment/onboarding-web --to-revision=2
+  kubectl delete deployments onboarding-web
   ```
 
   #### What this does:

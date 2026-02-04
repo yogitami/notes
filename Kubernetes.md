@@ -198,6 +198,50 @@ Data persists even if the pod restarts.
   CONTAINERS (Your Application)
   ```
 
+  ```
+  kubectl get pods
+  kubectl get deployments -n default
+  kubectl get pods -n default | grep onboarding-cs
+  kubectl describe deployment onboarding-web -n default (View deployment details)
+  kubectl get deployment onboarding-web
+  kubectl scale deployment onboarding-web --replicas=5
+  kubectl set image deployment/onboarding-web onboarding-web=gcr.io/bux/onboarding-web:2.60.0
+  kubectl rollout status deployment/onboarding-web (Watch the rollout)
+  kubectl rollout undo deployment/onboarding-web
+  # Or rollback to a specific revision
+  kubectl rollout history deployment/onboarding-web
+  kubectl rollout undo deployment/onboarding-web --to-revision=2
+  ```
+
+  #### What this does:
+   - Terraform calls Helm
+   - Helm downloads the onboarding-web chart
+   - Chart contains a Deployment template
+   - Helm renders the template with your values
+   - Kubernetes creates the Deployment
+   - Deployment creates ReplicaSet
+   - ReplicaSet creates Pods
+ 
+ #### How Service & Deployment works together
+ ```
+ ┌──────────────────────────────────────────────────┐
+ │  DEPLOYMENT: onboarding-web                      │
+ │  Manages:                                        │
+ │  ├─ Pod 1 (label: app=onboarding-web)            │
+ │  ├─ Pod 2 (label: app=onboarding-web)            │
+ │  └─ Pod 3 (label: app=onboarding-web)            │
+ └──────────────────────────────────────────────────┘
+                        ↑
+                        │ Finds pods by label
+                        │
+ ┌──────────────────────────────────────────────────┐
+ │  SERVICE: onboarding-web                         │
+ │  Selector: app=onboarding-web                    │
+ │  Provides: onboarding-web.default:8080           │
+ │  Routes traffic to all 3 pods                    │
+ └──────────────────────────────────────────────────┘
+```
+
 ### StatefulSet
 - Used for databases and stateful applications
 

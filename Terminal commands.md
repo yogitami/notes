@@ -93,7 +93,9 @@
   `Terminal → Settings → Profiles → Keyboard → Use Option as Meta key`
 - Works best with **zsh** (default macOS shell)
 
-  # Vim Keyboard Shortcuts Cheat Sheet
+---
+
+# Vim Keyboard Shortcuts Cheat Sheet
 
 ## Modes
 | Mode | Key |

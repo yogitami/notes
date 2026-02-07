@@ -140,11 +140,22 @@ kubectl scale deployment onboarding-web -n default --replicas=5
 
 ## 🌍 Service & Ingress
 
-- A stable "address" that lets other apps find and talk to your pods
+- A Service is like a permanent phone number or stable address that lets other applications find and communicate with your pods, even though pods are constantly being created, destroyed, and replaced.
 - Pods communicate using **Services**.
-- Services have static IP and DNS.
-- Services provide load balancing.
+- A Service provides static IP, DNS name (like bootstrap.kafka:9092), load balancing and service discovery.
+- You connect to: **service-name:port**
+- Service matches pods by labels.
 - Pod and Service lifecycles are independent.
+- We have Kafka Service in our onboarding project
+```
+kubectl get services -n default
+kubectl get svc onboarding-web -n default (svc short form for services)
+kubectl describe service onboarding-web -n default
+kubectl get endpoints onboarding-web -n default
+kubectl get pods -n default --show-labels
+kubectl get pods -n default -l app=onboarding-web
+kubectl get deployment onboarding-web -n default -o yaml | grep -A5 labels
+```
 
 ### Types of Services:
 - Internal Service

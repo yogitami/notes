@@ -273,6 +273,26 @@ kubectl get deployment onboarding-web -n default -o yaml | grep -A5 labels
 - External Service
 
 **Ingress** routes traffic into the cluster and forwards it to services.
+- Ingress is the HTTP/HTTPS router for your Kubernetes cluster that:
+
+✅ Provides single entry point (one IP for all services)
+✅ Routes based on domain names and paths
+✅ Handles SSL/TLS certificates
+✅ Saves money (one load balancer vs many)
+✅ Enables advanced routing (headers, methods, etc.)
+
+```
+# List ingress resources
+kubectl get ingress -n <namespace>
+# Describe ingress
+kubectl describe ingress <name> -n <namespace>
+# View controller logs
+kubectl logs -f <ingress-controller-pod> -n ingress-nginx
+# Get external IP
+kubectl get ingress <name> -n <namespace> -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+# Test ingress
+curl -H "Host: myapp.bux.com" http://<ingress-ip>/
+```
 
 ---
 

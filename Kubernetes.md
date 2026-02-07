@@ -297,7 +297,19 @@ curl -H "Host: myapp.bux.com" http://<ingress-ip>/
 ---
 
 ## 🔐 ConfigMap & Secret (External Configuration)
-ConfigMaps and Secrets must be connected to Pods.
+- ConfigMaps and Secrets must be connected to Pods.
+- ConfigMaps and Secrets are both ways to store configuration data separately from your application code. They're like external configuration files that your pods can read.
+- Ex: environments/acceptance/configuration/global-apps.yaml (Referenced by your Terraform modules) (Get converted to ConfigMaps by Helm!)
+
+  #### How pod uses config map and secrets.
+  - In deployments, We can values into load spec.template.spec.env like this
+    ```
+    name: KAFKA_BOOTSTRAP
+          valueFrom:
+            configMapKeyRef:
+              name: onboarding-config
+              key: KAFKA_BOOTSTRAP
+    ```
 
 ### ConfigMap
 - Stores non-sensitive configuration (e.g., DB URL).
@@ -307,6 +319,23 @@ ConfigMaps and Secrets must be connected to Pods.
 - Secure storage for sensitive data (passwords, certificates, API keys) (base64 encoded).
 - Extensively used for Kafka credentials, certificates, encryption keys.
 - Keeps sensitive data out of your application code
+
+```
+# ConfigMaps
+kubectl get configmap -n <namespace>
+kubectl describe configmap <name> -n <namespace>
+kubectl create configmap <name> --from-literal=KEY=value -n <namespace>
+kubectl edit configmap <name> -n <namespace>
+
+# Secrets
+kubectl get secret -n <namespace>
+kubectl describe secret <name> -n <namespace>
+kubectl create secret generic <name> --from-literal=KEY=value -n <namespace>
+kubectl get secret <name> -o jsonpath='{.data.KEY}' | base64 -d
+
+# After updates
+kubectl rollout restart deployment/<name> -n <namespace>
+```
 
 ---
 

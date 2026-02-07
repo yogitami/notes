@@ -517,6 +517,217 @@ kubectl config set-context my-new-context \
 
 ---
 
+## K9s
+
+# K9s Cheat Sheet
+
+## Resource Navigation
+
+Type `:` then the resource name or shortcut:
+
+| Shortcut | Resource | Description |
+|----------|----------|-------------|
+| `:pods` or `:po` | Pods | Running containers |
+| `:deployments` or `:deploy` or `:dp` | Deployments | App deployments |
+| `:services` or `:svc` | Services | Network services |
+| `:ingress` or `:ing` | Ingress | HTTP routing |
+| `:configmaps` or `:cm` | ConfigMaps | Configuration |
+| `:secrets` or `:sec` | Secrets | Sensitive data |
+| `:namespaces` or `:ns` | Namespaces | Namespaces |
+| `:nodes` or `:no` | Nodes | Cluster nodes |
+| `:events` or `:ev` | Events | Cluster events |
+| `:jobs` | Jobs | Batch jobs |
+| `:cronjobs` or `:cj` | CronJobs | Scheduled jobs |
+| `:daemonsets` or `:ds` | DaemonSets | Node daemons |
+| `:statefulsets` or `:sts` | StatefulSets | Stateful apps |
+| `:replicasets` or `:rs` | ReplicaSets | Pod replicas |
+| `:persistentvolumes` or `:pv` | PersistentVolumes | Storage volumes |
+| `:persistentvolumeclaims` or `:pvc` | PVCs | Volume claims |
+| `:storageclasses` or `:sc` | StorageClasses | Storage types |
+| `:contexts` or `:ctx` | Contexts | Cluster contexts |
+| `:endpoints` or `:ep` | Endpoints | Service endpoints |
+
+## Universal Keyboard Shortcuts
+
+### Navigation
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `↑` / `k` | Up | Move up one line |
+| `↓` / `j` | Down | Move down one line |
+| `PgUp` / `ctrl-b` | Page Up | Scroll up one page |
+| `PgDn` / `ctrl-f` | Page Down | Scroll down one page |
+| `g` | Top | Jump to top |
+| `shift-g` | Bottom | Jump to bottom |
+| `h` | Left | Scroll left |
+| `l` | Right | Scroll right |
+
+### Actions
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `Enter` | View | View resource details |
+| `y` | YAML | View full YAML |
+| `d` | Describe | Describe resource |
+| `e` | Edit | Edit resource |
+| `ctrl-d` | Delete | Delete resource |
+| `z` | Toggle | Toggle auto-scroll |
+| `w` | Wrap | Toggle line wrap |
+| `s` | Shell | Shell into pod/container |
+| `f` | Port Forward | Forward port to localhost |
+
+### Filtering & Search
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `/` | Filter | Filter resources by name |
+| `esc` | Clear Filter | Clear search filter |
+| `n` | Next | Next search result |
+| `shift-n` | Previous | Previous search result |
+
+### View Control
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `?` | Help | Show all shortcuts |
+| `esc` | Back | Go back to previous view |
+| `ctrl-r` | Refresh | Force refresh |
+| `:` | Command | Enter command mode |
+| `q` or `ctrl-c` | Quit | Exit k9s |
+
+### Namespace Control
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `0` (zero) | All Namespaces | Show all namespaces |
+| `ctrl-a` | Select Namespace | Pick namespace |
+
+## Pod-Specific Shortcuts
+
+In `:po` (pods) view:
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `l` | Logs | View pod logs (tail -f) |
+| `shift-l` | Previous Logs | Logs from previous container |
+| `p` | Previous | Previous container logs |
+| `c` | Containers | Select container (multi-container) |
+| `s` | Shell | Open shell in pod |
+| `a` | Attach | Attach to running container |
+| `shift-r` | Restart | Restart pod (deletes it) |
+| `f` | Port Forward | Port forward to pod |
+| `ctrl-d` | Delete | Delete pod |
+
+## Deployment-Specific Shortcuts
+
+In `:deploy` (deployments) view:
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `s` | Scale | Scale replicas |
+| `shift-r` | Restart | Rolling restart |
+| `l` | Logs | View logs from all pods |
+| `y` | YAML | View deployment YAML |
+| `d` | Describe | Describe deployment |
+| `e` | Edit | Edit deployment |
+| `Enter` | View Pods | Show deployment's pods |
+
+## Secret-Specific Shortcuts
+
+In `:sec` (secrets) view:
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `x` | **Decode** | **View decoded secrets** ⭐ |
+| `y` | YAML | View YAML (base64 encoded) |
+| `d` | Describe | Describe secret |
+| `e` | Edit | Edit secret |
+| `ctrl-d` | Delete | Delete secret |
+
+## ConfigMap-Specific Shortcuts
+
+In `:cm` (configmaps) view:
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `y` | YAML | View full YAML |
+| `d` | Describe | Describe ConfigMap |
+| `e` | Edit | Edit ConfigMap |
+| `Enter` | View | View ConfigMap details |
+| `ctrl-d` | Delete | Delete ConfigMap |
+
+## Service-Specific Shortcuts
+
+In `:svc` (services) view:
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `f` | Port Forward | Port forward to service |
+| `y` | YAML | View service YAML |
+| `d` | Describe | Describe service |
+| `Enter` | View Endpoints | Show service endpoints |
+
+## Node-Specific Shortcuts
+
+In `:no` (nodes) view:
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `c` | Cordon | Mark node unschedulable |
+| `u` | Uncordon | Mark node schedulable |
+| `o` | Drain | Drain node (evict pods) |
+| `y` | YAML | View node YAML |
+| `d` | Describe | Describe node |
+| `s` | Shell | SSH into node |
+
+## Log View Shortcuts
+
+When viewing logs (`l` in pod view):
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `↑` / `↓` | Scroll | Scroll logs |
+| `g` | Top | Jump to top of logs |
+| `shift-g` | Bottom | Jump to bottom |
+| `f` | Follow | Toggle follow mode |
+| `w` | Wrap | Toggle line wrap |
+| `z` | Auto-scroll | Toggle auto-scroll |
+| `/` | Search | Search in logs |
+| `n` | Next | Next search match |
+| `shift-n` | Previous | Previous search match |
+| `esc` | Back | Exit log view |
+
+## YAML View Shortcuts
+
+When viewing YAML (`y`):
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `↑` / `↓` | Scroll | Scroll YAML |
+| `g` | Top | Jump to top |
+| `shift-g` | Bottom | Jump to bottom |
+| `/` | Search | Search in YAML |
+| `n` | Next | Next search match |
+| `w` | Write | Save YAML to file |
+| `esc` | Back | Exit YAML view |
+
+## Special Views
+
+| Command | View | Description |
+|---------|------|-------------|
+| `:pulses` or `:pu` | Pulses | Overview dashboard |
+| `:xray` | XRay | Resource relationships |
+| `:popeye` or `:pop` | Popeye | Cluster sanitizer |
+| `:aliases` | Aliases | View/edit aliases |
+| `:contexts` or `:ctx` | Contexts | Switch contexts |
+| `:helm` | Helm | Helm releases |
+
+## Quick Workflows
+
+### View Pod Logs
+
+---
+
 ## 🔄 Request Flow
 
     Browser → Ingress → Service → Pod

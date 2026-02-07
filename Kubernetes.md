@@ -132,9 +132,110 @@ kubectl scale deployment onboarding-web -n default --replicas=5
 - Pod is an abstraction over containers. A wrapper around one or more containers running your application
 - Usually one application per pod.
 - Each pod has its own IP address.
+- POD contains a metadata section for describing the Pod and its labels, a spec section for describing volumes, and a list of containers that will run in the Pod.
+- Each Pod contains Your Java application (Spring Boot microservice) , JVM (Java Virtual Machine), Configuration (environment variables, secrets), Resources (CPU, memory allocation), Network (unique IP address, ports).
+- How Pods are creating for onboarding service.
+   - terraform code has helm release(which has a helm chart) --> this chart contains template for deployments, service, configmaps, secrets.
 - **Example**:
   * Each Java application (from the onboarding repo) runs in pods
   * App and database run in separate pods.
+
+  ```
+  YOUR JAVA CODE (buxapp/onboarding repo)
+      ↓ Built into
+  DOCKER IMAGE (gcr.io/bux/onboarding-web:2.59.7)
+      ↓ Stored in
+  GOOGLE CONTAINER REGISTRY
+      ↓ Referenced by
+  HELM CHART (buxcharts.devops.getbux.com)
+      ↓ Deployed by
+  TERRAFORM (buxapp/onboarding-infra)
+      ↓ Creates
+  DEPLOYMENT (replicas: 3)
+      ↓ Creates
+  REPLICASET
+      ↓ Creates
+  PODS (3 instances)
+      ├─ Pod 1: onboarding-web-abc-111 (Node 1, IP: 10.244.1.10)
+      ├─ Pod 2: onboarding-web-abc-222 (Node 2, IP: 10.244.2.15)
+      └─ Pod 3: onboarding-web-abc-333 (Node 3, IP: 10.244.3.20)
+              ↓ Discovered by
+          SERVICE
+              ↓ Routes traffic to
+          RUNNING APPLICATION
+  ```
+ 
+  ```
+  kubectl get pods
+  kubectl delete pods/kuard
+  kubectl describe pods kuard
+  kubectl get pods -n default --show-labels
+  kubectl logs kuard (-f for continius streaming, --previous for getting previous logs)
+  kubectl describe pod onboarding-web-7d8f9c5b6d-abc12 -n default
+  kubectl get pods --all-namespaces
+  # Pods with more details
+  kubectl get pods -n default -o wide
+  # Last 100 lines
+  kubectl logs --tail=100 onboarding-web-7d8f9c5b6d-abc12 -n default
+  # Logs from last hour
+  kubectl logs --since=1h onboarding-web-7d8f9c5b6d-abc12 -n default
+  # Logs from all pods of a deployment
+  kubectl logs -l app=onboarding-web -n default
+  # Open a shell in the pod
+  kubectl exec -it onboarding-web-7d8f9c5b6d-abc12 -n default -- /bin/bash
+  # Inside the pod, you can:
+  ps aux                           # See running processes
+  ls -la /secrets/                 # Check mounted secrets
+  curl localhost:8080/actuator/health  # Check app health
+  env | grep KAFKA                 # Check environment variables
+  cat /proc/1/limits               # Check resource limits
+  # Run a single command
+  kubectl exec onboarding-web-7d8f9c5b6d-abc12 -n default -- curl localhost:8080/actuator/health
+
+  # Quick status
+  kubectl get pods -n default
+  # Detailed events and status
+  kubectl describe pod onboarding-web-7d8f9c5b6d-abc12 -n default
+  # Check resource usage
+  kubectl top pod onboarding-web-7d8f9c5b6d-abc12 -n default
+
+  # Forward local port 8080 to pod's port 8080
+  kubectl port-forward onboarding-web-7d8f9c5b6d-abc12 8080:8080 -n default
+  # Now you can access the pod from your laptop:
+  curl http://localhost:8080/actuator/health
+  # Or open in browser: http://localhost:8080
+  ```
+
+  ```
+  1. Terraform applies configuration
+   ↓
+  2. Helm creates Deployment: onboarding-web (replicas: 3)
+     ↓
+  3. Kubernetes Scheduler: "Need to create 3 pods"
+     ↓
+  4. Scheduler picks nodes with available resources
+     - Pod 1 → gke-node-1
+     - Pod 2 → gke-node-2
+     - Pod 3 → gke-node-3
+     ↓
+  5. Kubelet on each node:
+     - Pulls image: gcr.io/bux/onboarding-web:2.59.7
+     - Creates container
+     - Mounts secrets
+     - Sets environment variables
+     ↓
+  6. Container starts
+     - Java application starts
+     - Spring Boot initialization
+     ↓
+  7. Readiness probe checks: GET /actuator/health
+     - Returns 200 OK ✅
+     ↓
+  8. Pod marked as READY
+     - Service starts routing traffic to this pod
+     ↓
+  9. Pod is RUNNING and serving requests ✅
+  ```
 
 ---
 

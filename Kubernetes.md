@@ -204,6 +204,16 @@ kubectl scale deployment onboarding-web -n default --replicas=5
   # Now you can access the pod from your laptop:
   curl http://localhost:8080/actuator/health
   # Or open in browser: http://localhost:8080
+
+  # Restart onboarding-applicants
+  kubectl rollout restart deployment/onboarding-applicants -n default
+  # Watch it restart
+  kubectl rollout status deployment/onboarding-web -n default
+  # Get the new pod name
+  kubectl get pods -n default | grep onboarding-web
+  
+  # Check logs
+  kubectl logs onboarding-web-<new-pod-id> -n default
   ```
 
   ```

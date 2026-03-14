@@ -23,4 +23,10 @@
             }
       
         }
-        ``` 
+        ```
+
+### Floyd Warshall Algorithm
+
+1. Given a matrix dist[][] of size n x n, where dist[i][j] represents the weight of the edge from node i to node j.
+1. If there is no direct edge, dist[i][j] is set to INF (a large value i.e., 108).
+1. The diagonal entries dist[i][i] are 0, since the distance from a node to itself is zero.

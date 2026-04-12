@@ -30,3 +30,8 @@
 1. Given a matrix dist[][] of size n x n, where dist[i][j] represents the weight of the edge from node i to node j.
 1. If there is no direct edge, dist[i][j] is set to INF (a large value i.e., 108).
 1. The diagonal entries dist[i][i] are 0, since the distance from a node to itself is zero.
+
+### Convert from array to List
+1. if we have int[] array and we want to convert into List<Integer> : the way to do is
+   
+   > Arrays.stream(nums).boxed().collect(Collectors.toList());

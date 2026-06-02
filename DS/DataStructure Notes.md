@@ -1,12 +1,16 @@
 ### Sort the entries in hashmap (freqMap)
 - Create an arrayList
-  > List<Map.Entry<Integer,Integer>> entries = new ArrayList<>(freqMap.entrySet());
-    entries.sort( (a,b) -> b.getValue() - a.getValue()); // by descending order
+  ```
+   List<Map.Entry<Integer,Integer>> entries = new ArrayList<>(freqMap.entrySet());
+   entries.sort( (a,b) -> b.getValue() - a.getValue()); // by descending order
+  ```
 - First k elements
-  > int[] result = new int[k];
+  ```
+   int[] result = new int[k];
     for(int i = 0; i < k; i++){
         result[i] = entries.get(i).getKey();
     }
+  ```
 
 
 ### LinkedHashMap
